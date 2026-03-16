@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="FormationPro">
+<meta name="theme-color" content="#0A0A0A">
+<title>FormationPro — Tiegbe Bamba</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --g:#C9A84C;--gl:#E8C97A;--gd:rgba(201,168,76,0.13);
+  --d:#0A0A0A;--d2:#111;--d3:#1A1A1A;--d4:#222;--d5:#2A2A2A;
+  --t:#E8E0D0;--tm:#B0A898;--td:#8A8070;
+  --ok:#4CAF82;--er:#E05555;--ac:#4A7CFF;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:var(--d)}
+body{color:var(--t);font-family:'DM Sans',-apple-system,sans-serif;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-thumb{background:rgba(201,168,76,.2);border-radius:2px}
+
+#app{display:flex;flex-direction:column;height:100vh}
+
+/* TOPBAR */
+#topbar{background:var(--d2);border-bottom:1px solid rgba(201,168,76,.12);padding:0 16px;height:48px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.logo{font-family:'Playfair Display',serif;font-size:17px;font-weight:900;color:var(--g)}
+.logo span{color:var(--t);font-weight:700}
+
+/* CONTENT */
+#content{flex:1;overflow:hidden;min-height:0;position:relative}
+.page{height:100%;overflow-y:auto;padding:14px 16px;display:none;animation:fi .2s ease}
+.page.active{display:block}
+.page-flex{height:100%;display:none;flex-direction:column;animation:fi .2s ease}
+.page-flex.active{display:flex}
+@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* BOTTOM NAV */
+#nav{background:var(--d2);border-top:1px solid rgba(201,168,76,.12);display:flex;flex-shrink:0;padding-bottom:env(safe-area-inset-bottom,0px)}
+.nav-btn{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;padding:8px 4px;background:transparent;border:none;cursor:pointer;font-family:inherit;border-top:2px solid transparent}
+.nav-btn.active{border-top-color:var(--g)}
+.nav-btn .ni{font-size:20px}
+.nav-btn .nl{font-size:9px;letter-spacing:.03em;font-weight:400;color:var(--td);text-transform:uppercase}
+.nav-btn.active .nl{color:var(--g);font-weight:600}
+
+/* CARDS */
+.card{background:var(--d3);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:16px;margin-bottom:12px}
+.card-gold{border-color:rgba(201,168,76,.25);background:rgba(201,168,76,.04)}
+.card-blue{border-left:4px solid var(--ac);background:rgba(74,124,255,.03)}
+.card-green{border-left:4px solid var(--ok);background:rgba(76,175,130,.03)}
+.card-accent{border-left:4px solid var(--g)}
+
+/* BUTTONS */
+.btn-g{background:var(--g);color:var(--d);border:none;border-radius:7px;padding:9px 18px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit}
+.btn-o{background:transparent;color:var(--tm);border:1px solid rgba(255,255,255,.12);border-radius:7px;padding:9px 18px;font-size:12px;cursor:pointer;font-family:inherit}
+
+/* TYPOGRAPHY */
+.h1{font-family:'Playfair Display',serif;font-size:18px;font-weight:900}
+.h2{font-family:'Playfair Display',serif;font-size:14px;font-weight:700}
+.h3{font-family:'Playfair Display',serif;font-size:13px;font-weight:700}
+.mono{font-family:'DM Mono',monospace}
+.gold{color:var(--g)}
+.ok{color:var(--ok)}
+.ac{color:var(--ac)}
+.dim{color:var(--td)}
+.mid{color:var(--tm)}
+
+/* BADGES */
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600}
+.badge-g{background:rgba(201,168,76,.1);color:var(--g);border:1px solid rgba(201,168,76,.3)}
+.badge-ok{background:rgba(76,175,130,.1);color:var(--ok);border:1px solid rgba(76,175,130,.3)}
+.badge-ac{background:rgba(74,124,255,.1);color:var(--ac);border:1px solid rgba(74,124,255,.3)}
+.badge-gold2{background:rgba(255,215,0,.1);color:#FFD700;border:1px solid rgba(255,215,0,.3)}
+
+/* TABS */
+.tabs{display:flex;border-bottom:1px solid rgba(255,255,255,.07);overflow-x:auto;flex-shrink:0;background:var(--d2)}
+.tab{padding:9px 13px;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--td);cursor:pointer;font-size:11px;font-weight:400;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;font-family:inherit;margin-bottom:-1px}
+.tab.active{color:var(--g);border-bottom-color:var(--g);font-weight:600}
+
+/* CHECKBOX */
+.chk{width:15px;height:15px;border-radius:3px;border:1.5px solid rgba(201,168,76,.3);background:transparent;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--d);flex-shrink:0;margin-top:2px;cursor:pointer;transition:all .15s}
+.chk.on{background:var(--g);border-color:var(--g)}
+
+/* SECTION COLLAPSIBLE */
+.section-hdr{display:flex;align-items:center;justify-content:space-between;background:var(--d3);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:11px 13px;cursor:pointer;border-left:4px solid var(--g)}
+.section-hdr.open{border-radius:10px 10px 0 0}
+.section-body{background:var(--d4);border:1px solid rgba(255,255,255,.07);border-top:none;border-radius:0 0 10px 10px;padding:8px 12px 10px}
+.arr{transition:transform .2s;color:var(--td);font-size:12px}
+.open .arr{transform:rotate(90deg)}
+
+/* FORM DETAIL */
+.module-card{background:var(--d3);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:13px;margin-bottom:8px;cursor:pointer;border-left:3px solid transparent}
+.module-body{margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.06);display:none}
+.module-body.open{display:block}
+
+/* INPUT */
+input,textarea{background:var(--d4);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:9px 12px;color:var(--t);font-size:13px;font-family:inherit;outline:none;width:100%;box-sizing:border-box}
+input:focus,textarea:focus{border-color:rgba(201,168,76,.45)}
+textarea{resize:none;line-height:1.5}
+label{font-size:10px;color:var(--td);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:1px}
+
+/* ROW UTIL */
+.row{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.row:last-child{border-bottom:none}
+
+/* PROGRESS */
+.progress-bar{height:5px;background:var(--d5);border-radius:3px;overflow:hidden;margin:8px 0}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--g),var(--gl));border-radius:3px;transition:width .5s}
+
+/* CHIP */
+.chip{padding:5px 10px;background:var(--d3);border:1px solid rgba(255,255,255,.07);border-radius:20px;font-size:10px;color:var(--td);cursor:pointer;font-family:inherit;white-space:nowrap}
+.chip:active{border-color:var(--g);color:var(--g)}
+
+/* CHAT */
+#chat-msgs{flex:1;overflow-y:auto;padding:12px 16px;display:flex;flex-direction:column;gap:12px;min-height:0}
+.msg-wrap{display:flex;gap:9px;align-items:flex-start}
+.msg-wrap.user{flex-direction:row-reverse}
+.msg-av{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.msg-av.ai{background:rgba(201,168,76,.13);border:1px solid rgba(201,168,76,.25)}
+.msg-av.user{background:var(--d4);border:1px solid rgba(255,255,255,.08)}
+.msg-bubble{max-width:80%;padding:10px 13px;border-radius:10px;font-size:13px;line-height:1.7;white-space:pre-wrap;word-break:break-word}
+.msg-bubble.ai{background:var(--d3);border:1px solid rgba(255,255,255,.06);color:var(--tm)}
+.msg-bubble.user{background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.2);color:var(--t)}
+.msg-tag{font-size:10px;margin-bottom:4px;font-family:'DM Mono',monospace}
+#chat-input-bar{padding:10px 14px;border-top:1px solid rgba(255,255,255,.06);background:var(--d2);display:flex;gap:8px;align-items:flex-end;flex-shrink:0}
+#chat-input{flex:1;background:var(--d3);border:1px solid rgba(255,255,255,.09);border-radius:10px;padding:10px 12px;color:var(--t);font-size:14px;resize:none;font-family:inherit;line-height:1.5}
+#chat-send{width:42px;height:42px;background:var(--g);border:none;border-radius:10px;cursor:pointer;font-size:17px;flex-shrink:0}
+#chat-send:disabled{opacity:.38;cursor:not-allowed}
+
+/* YT LINK */
+.yt-link{display:flex;align-items:center;gap:8px;padding:8px 10px;background:rgba(255,0,0,.08);border:1px solid rgba(255,0,0,.2);border-radius:8px;text-decoration:none;margin-top:6px}
+.yt-link .yt-icon{font-size:16px;flex-shrink:0}
+.yt-link span{font-size:11px;color:var(--tm);line-height:1.4}
+
+@keyframes pulse{0%,100%{opacity:.25;transform:scale(.7)}50%{opacity:1;transform:scale(1)}}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--g);display:inline-block}
+a{text-decoration:none;color:inherit}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="topbar">
+    <div class="logo">Formation<span>Pro</span></div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <span id="saved-badge" style="display:none;background:var(--gd);color:var(--g);border:1px solid rgba(201,168,76,.3);border-radius:20px;padding:2px 8px;font-size:11px;font-weight:600"></span>
+      <span id="pct-badge" class="mono" style="font-size:10px;color:var(--td)">0%</span>
+    </div>
+  </div>
+
+  <div id="content">
+
+    <!-- ═══════════════ DASHBOARD ═══════════════ -->
+    <div class="page active" id="page-dashboard">
+      <!-- Hero -->
+      <div class="card card-gold" style="position:relative;overflow:hidden;margin-bottom:12px">
+        <div style="position:absolute;right:-8px;top:-15px;font-family:serif;font-size:80px;font-weight:900;color:rgba(201,168,76,.04);line-height:1">€</div>
+        <div class="h1" style="margin-bottom:4px">Tiegbe Bamba <span class="gold">— Plan 10K€</span></div>
+        <div style="font-size:12px;color:var(--td);line-height:1.6;margin-bottom:14px">Ex-joueur pro · 5 continents · Master Communication · 5 business · <strong class="gold">0€ à investir grâce au CPF</strong></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn-g" onclick="goPage('profile')">🏀 Mon Profil</button>
+          <button class="btn-o" onclick="goPage('assistant')">🤖 Assistant</button>
+        </div>
+      </div>
+
+      <!-- Voie 1 -->
+      <div class="h2 gold" style="margin-bottom:10px">🎯 Plan Premier 10 000€</div>
+      <div class="card card-accent" style="margin-bottom:12px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <div class="h3">🚀 VOIE 1 — Revenus immédiats</div>
+          <span class="badge badge-g">Dès maintenant</span>
+        </div>
+        <div style="font-size:12px;color:var(--td);margin-bottom:10px">Tes compétences actuelles — 0€ à dépenser, facture dès cette semaine</div>
+        <div class="row" style="border-bottom:1px solid rgba(255,255,255,.05)">
+          <span style="font-size:18px;flex-shrink:0;width:24px;text-align:center">🧹</span>
+          <div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--t);margin-bottom:1px">Formation Agent d'Entretien</div><div style="font-size:11px;color:var(--td)">4 ans · 1000+ sessions · Hôtels, commerces IDF</div><div style="font-size:10px;color:var(--ok);margin-top:2px">Rentable immédiatement</div></div>
+          <div style="font-size:11px;color:var(--g);font-weight:700;font-family:monospace;flex-shrink:0">1 200€/gr</div>
+        </div>
+        <div class="row" style="border-bottom:1px solid rgba(255,255,255,.05)">
+          <span style="font-size:18px;flex-shrink:0;width:24px;text-align:center">🏀</span>
+          <div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--t);margin-bottom:1px">Camps basket + Module Mindset 1h</div><div style="font-size:11px;color:var(--td)">Intègre 1h mental → valeur perçue × 2</div><div style="font-size:10px;color:var(--ok);margin-top:2px">Dès prochain camp</div></div>
+          <div style="font-size:11px;color:var(--g);font-weight:700;font-family:monospace;flex-shrink:0">+200€/pers</div>
+        </div>
+        <div class="row">
+          <span style="font-size:18px;flex-shrink:0;width:24px;text-align:center">🧠</span>
+          <div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--t);margin-bottom:1px">Sensibilisation Mindset 3h</div><div style="font-size:11px;color:var(--td)">Clubs amateurs, académies, lycées sportifs</div><div style="font-size:10px;color:var(--ok);margin-top:2px">Sans diplôme supplémentaire</div></div>
+          <div style="font-size:11px;color:var(--g);font-weight:700;font-family:monospace;flex-shrink:0">1 800€/gr</div>
+        </div>
+        <div style="margin-top:8px;padding:8px 10px;background:rgba(201,168,76,.08);border-radius:8px">
+          <div style="font-size:11px;color:var(--g);font-weight:600">💰 Mois 1 possible : Ménage×2 + Camp + Mindset = <strong>3 500€</strong></div>
+        </div>
+      </div>
+
+      <!-- Voie 2 -->
+      <div class="card" style="border-left:4px solid var(--ac);background:rgba(74,124,255,.03);margin-bottom:12px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <div class="h3" style="color:var(--ac)">📈 VOIE 2 — Après CPF (mois 2-3)</div>
+          <span class="badge badge-ac">+CPF</span>
+        </div>
+        <div style="font-size:12px;color:var(--td);margin-bottom:12px">Une fois CNV + SST obtenus, ces formations décuplent tes revenus</div>
+
+        <div style="background:var(--d4);border-radius:10px;padding:11px 13px;margin-bottom:8px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px">
+            <div style="font-size:12px;font-weight:600;color:var(--t)">🤝 Gestion des Conflits (CNV boost)</div>
+            <div style="font-size:11px;color:var(--ac);font-weight:700;font-family:monospace;flex-shrink:0;margin-left:8px">1 200€</div>
+          </div>
+          <div style="font-size:11px;color:var(--td);line-height:1.5">Avec ta certification CNV + Master Communication = expertise unique en France. OPCO finance souvent 100%.</div>
+        </div>
+
+        <div style="background:var(--d4);border-radius:10px;padding:11px 13px;margin-bottom:8px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px">
+            <div style="font-size:12px;font-weight:600;color:var(--t)">🔥 Évacuation Incendie</div>
+            <div style="font-size:11px;color:var(--ac);font-weight:700;font-family:monospace;flex-shrink:0;margin-left:8px">900€</div>
+          </div>
+          <div style="font-size:11px;color:var(--td);line-height:1.5">Obligation légale Art. R4227-38 → toutes les entreprises en ont besoin chaque année. Client récurrent garanti.</div>
+        </div>
+
+        <div style="background:var(--d4);border-radius:10px;padding:11px 13px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px">
+            <div style="font-size:12px;font-weight:600;color:var(--t)">🎤 Devenir Meilleur Formateur</div>
+            <div style="font-size:11px;color:var(--ac);font-weight:700;font-family:monospace;flex-shrink:0;margin-left:8px">1 400€</div>
+          </div>
+          <div style="font-size:11px;color:var(--td);line-height:1.5">Vendre cette formation à d'autres formateurs débutants. Tu es l'unique expert multi-domaines en France.</div>
+        </div>
+      </div>
+
+      <!-- Voie 3 -->
+      <div class="card" style="border-left:4px solid var(--ok);background:rgba(76,175,130,.03);margin-bottom:12px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <div class="h3" style="color:var(--ok)">🏆 VOIE 3 — Scaling Sport (mois 3-6)</div>
+          <span class="badge badge-ok">Premium</span>
+        </div>
+        <div style="font-size:12px;color:var(--td);margin-bottom:12px">Ton avantage unique : ex-pro 5 continents + formateur certifié + entrepreneur</div>
+
+        <div style="background:var(--d4);border-radius:10px;padding:11px 13px;margin-bottom:8px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px">
+            <div style="font-size:12px;font-weight:600;color:var(--t)">🏆 ELITE 360° (clubs pro)</div>
+            <div style="font-size:11px;color:var(--ok);font-weight:700;font-family:monospace;flex-shrink:0;margin-left:8px">4 500€</div>
+          </div>
+          <div style="font-size:11px;color:var(--td);line-height:1.5">AFDAS finance 100% pour clubs du secteur sport. 1 club vendu = 10 recommandations dans le milieu.</div>
+        </div>
+
+        <div style="background:var(--d4);border-radius:10px;padding:11px 13px;margin-bottom:8px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px">
+            <div style="font-size:12px;font-weight:600;color:var(--t)">🏀 Formation Coach Pro</div>
+            <div style="font-size:11px;color:var(--ok);font-weight:700;font-family:monospace;flex-shrink:0;margin-left:8px">1 600€</div>
+          </div>
+          <div style="font-size:11px;color:var(--td);line-height:1.5">500 000 licenciés basket · 80% encadrés par bénévoles. Marché immense, aucune concurrence directe.</div>
+        </div>
+
+        <div style="background:var(--d4);border-radius:10px;padding:11px 13px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px">
+            <div style="font-size:12px;font-weight:600;color:var(--t)">🏟️ Formation Club Pro</div>
+            <div style="font-size:11px;color:var(--ok);font-weight:700;font-family:monospace;flex-shrink:0;margin-left:8px">2 000€</div>
+          </div>
+          <div style="font-size:11px;color:var(--td);line-height:1.5">4 000 clubs basket en France. Aucun formateur ne propose ça aux dirigeants aujourd'hui.</div>
+        </div>
+      </div>
+
+      <!-- CPF Plan -->
+      <div class="card" style="border-left:4px solid #FFD700;background:rgba(255,215,0,.03);margin-bottom:12px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <div class="h3" style="color:#FFD700">💳 Tes 1 500€ CPF — Plan optimal</div>
+          <span class="badge badge-gold2">0€ de ta poche</span>
+        </div>
+        <div class="row">
+          <div style="width:20px;height:20px;border-radius:4px;background:rgba(76,175,130,.2);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--ok);flex-shrink:0;font-weight:700">1</div>
+          <div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--t)">🎓 CNV — lacoopcnv.com</div><div style="font-size:11px;color:var(--ok)">→ Boost Master Communication → Conflits 1200€/session</div><div style="font-size:10px;color:var(--ok);font-weight:600;margin-top:2px">PRIORITÉ MAX · Cette semaine</div></div>
+          <div style="font-size:11px;color:#FFD700;font-weight:700;font-family:monospace;flex-shrink:0">~600€</div>
+        </div>
+        <div class="row">
+          <div style="width:20px;height:20px;border-radius:4px;background:rgba(74,124,255,.2);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--ac);flex-shrink:0;font-weight:700">2</div>
+          <div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--t)">🧯 SST — FMS 01 48 20 10 00</div><div style="font-size:11px;color:var(--ok)">→ Certification INRS → dispenser 600-1200€/session</div><div style="font-size:10px;color:var(--ac);font-weight:600;margin-top:2px">Appel lundi</div></div>
+          <div style="font-size:11px;color:#FFD700;font-weight:700;font-family:monospace;flex-shrink:0">~300€</div>
+        </div>
+        <div class="row">
+          <div style="width:20px;height:20px;border-radius:4px;background:rgba(201,168,76,.2);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--g);flex-shrink:0;font-weight:700">3</div>
+          <div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--t)">🧘 Gestes & Postures PRAP</div><div style="font-size:11px;color:var(--ok)">→ BTP/logistique/santé · Se vend tout seul</div></div>
+          <div style="font-size:11px;color:#FFD700;font-weight:700;font-family:monospace;flex-shrink:0">~400€</div>
+        </div>
+        <div style="margin-top:8px;padding:7px 10px;background:rgba(255,215,0,.06);border-radius:8px">
+          <div style="font-size:11px;color:#FFD700;font-weight:600">Total : ~1 300€ sur 1 500€ · Reste 200€ → matériel pédagogique</div>
+        </div>
+      </div>
+
+      <!-- Calcul 10K -->
+      <div class="card card-gold">
+        <div class="h3 gold" style="margin-bottom:10px">📊 Chemin vers 10 000€/mois</div>
+        <div class="row"><div style="width:52px;flex-shrink:0;font-size:10px;color:var(--g);font-weight:700;font-family:monospace;padding-top:2px">Mois 1</div><div style="flex:1;font-size:11px;color:var(--tm);line-height:1.5">Ménage×2 + Camp basket + Mindset sensib.</div><div class="h3 gold">3 500€</div></div>
+        <div class="row"><div style="width:52px;flex-shrink:0;font-size:10px;color:var(--g);font-weight:700;font-family:monospace;padding-top:2px">Mois 2</div><div style="flex:1;font-size:11px;color:var(--tm);line-height:1.5">+ Conflits CNV×2 + SST×1</div><div class="h3 gold">6 000€</div></div>
+        <div class="row"><div style="width:52px;flex-shrink:0;font-size:10px;color:var(--g);font-weight:700;font-family:monospace;padding-top:2px">Mois 3</div><div style="flex:1;font-size:11px;color:var(--tm);line-height:1.5">+ Incendie×2 + Postures×1</div><div class="h3 gold">8 400€</div></div>
+        <div class="row"><div style="width:52px;flex-shrink:0;font-size:10px;color:var(--g);font-weight:700;font-family:monospace;padding-top:2px">Mois 4</div><div style="flex:1;font-size:11px;color:var(--tm);line-height:1.5">+ ELITE 360° (1 club) + Coach Pro</div><div class="h3 gold">10K 🎉</div></div>
+        <div style="margin-top:10px;padding:9px 12px;background:rgba(201,168,76,.1);border-radius:8px">
+          <div style="font-size:11px;color:var(--g);font-weight:700;margin-bottom:2px">🔑 Tu as DÉJÀ tout pour démarrer cette semaine</div>
+          <div style="font-size:11px;color:var(--tm);line-height:1.6">CNV + Master Communication = super-arme unique. Aucun formateur en France n'a ton profil basketteur pro + entrepreneur + formateur.</div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="card" id="actions-card">
+        <div class="h3" style="margin-bottom:8px">✅ Actions cette semaine</div>
+        <div id="actions-list"></div>
+      </div>
+    </div>
+
+    <!-- ═══════════════ FORMATIONS ═══════════════ -->
+    <div class="page-flex" id="page-formations">
+      <div class="tabs" id="form-tabs">
+        <button class="tab active" onclick="switchFormTab('standard',this)">📋 Standards</button>
+        <button class="tab" onclick="switchFormTab('menage',this)">🧹 Ménage</button>
+        <button class="tab" onclick="switchFormTab('sport',this)">🏆 Sport</button>
+        <button class="tab" onclick="switchFormTab('skills',this)">⚡ Skills</button>
+      </div>
+      <div style="flex:1;overflow-y:auto;padding:12px 16px;min-height:0" id="form-content"></div>
+    </div>
+
+    <!-- ═══════════════ CENTRES ═══════════════ -->
+    <div class="page-flex" id="page-library">
+      <div style="padding:10px 16px;background:var(--d2);border-bottom:1px solid rgba(255,255,255,.06);flex-shrink:0">
+        <input type="text" id="lib-search" placeholder="🔍 Rechercher..." style="margin-bottom:8px" oninput="filterLib()">
+        <div style="display:flex;gap:4px;overflow-x:auto;padding-bottom:2px" id="lib-cats"></div>
+      </div>
+      <div style="flex:1;overflow-y:auto;padding:10px 16px;min-height:0" id="lib-content"></div>
+    </div>
+
+    <!-- ═══════════════ ASSISTANT ═══════════════ -->
+    <div class="page-flex" id="page-assistant">
+      <div style="padding:8px 14px;background:var(--d2);border-bottom:1px solid rgba(255,255,255,.05);display:flex;flex-wrap:wrap;gap:5px;flex-shrink:0" id="quick-chips"></div>
+      <div id="chat-msgs"></div>
+      <div id="chat-input-bar">
+        <textarea id="chat-input" rows="2" placeholder="Pose ta question... (Entrée pour envoyer)"></textarea>
+        <button id="chat-send" onclick="sendMsg()">➤</button>
+      </div>
+    </div>
+
+    <!-- ═══════════════ ROADMAP ═══════════════ -->
+    <div class="page-flex" id="page-roadmap">
+      <div class="tabs">
+        <button class="tab active" onclick="switchRoadTab('plan',this)">🎯 Roadmap</button>
+        <button class="tab" onclick="switchRoadTab('docs',this)">📄 Documents</button>
+        <button class="tab" onclick="switchRoadTab('vente',this)">💬 Scripts</button>
+      </div>
+      <div style="flex:1;overflow-y:auto;padding:12px 16px;min-height:0" id="roadmap-content"></div>
+    </div>
+
+    <!-- ═══════════════ PROFIL ═══════════════ -->
+    <div class="page" id="page-profile">
+      <div class="card card-gold" style="position:relative;overflow:hidden;margin-bottom:14px">
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--g),#FFD700,var(--g))"></div>
+        <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:14px;margin-top:4px">
+          <div style="width:60px;height:60px;border-radius:12px;background:linear-gradient(135deg,rgba(201,168,76,.3),rgba(201,168,76,.1));border:2px solid rgba(201,168,76,.5);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0">🏀</div>
+          <div>
+            <div class="h1 gold">Tiegbe Bamba</div>
+            <div style="font-size:12px;color:var(--t);margin-top:3px;font-weight:500">Pro Basketball Player · Formateur Expert</div>
+            <div style="font-size:11px;color:var(--td);margin-top:2px">Côte d'Ivoire 🇨🇮 · Né à Sarcelles · 1m96 · Ailier</div>
+          </div>
+        </div>
+        <div style="font-size:13px;color:var(--tm);line-height:1.7;margin-bottom:12px">Joueur professionnel ayant évolué sur <strong class="gold">5 continents</strong> en 1ère et 2ème division. Sélection Nationale Côte d'Ivoire 🇨🇮. Diplômé de <strong class="gold">Portland State University</strong> USA · Master Communication & Marketing · <strong class="gold">5 business créés</strong> · Formateur terrain expert.</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn-g" onclick="goPage('formations')">🎓 Mes formations</button>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="h2 gold" style="margin-bottom:10px">📊 Carrière Pro</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+        <div class="card" style="margin-bottom:0;position:relative;overflow:hidden"><div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--g),transparent)"></div><div class="h1 gold">5</div><div style="font-size:10px;color:var(--t);font-weight:600;margin-top:2px;text-transform:uppercase">Continents</div><div style="font-size:10px;color:var(--td);margin-top:2px">France·USA·Grèce·Roumanie·Islande</div></div>
+        <div class="card" style="margin-bottom:0;position:relative;overflow:hidden"><div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--g),transparent)"></div><div class="h1 gold">15+</div><div style="font-size:10px;color:var(--t);font-weight:600;margin-top:2px;text-transform:uppercase">Années pro</div><div style="font-size:10px;color:var(--td);margin-top:2px">Limoges·Reims·Portland·Rouen</div></div>
+        <div class="card" style="margin-bottom:0;position:relative;overflow:hidden"><div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--g),transparent)"></div><div class="h1 gold">11.6</div><div style="font-size:10px;color:var(--t);font-weight:600;margin-top:2px;text-transform:uppercase">Pts/match</div><div style="font-size:10px;color:var(--td);margin-top:2px">Portland State Senior season</div></div>
+        <div class="card" style="margin-bottom:0;position:relative;overflow:hidden"><div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--g),transparent)"></div><div class="h1 gold">24</div><div style="font-size:10px;color:var(--t);font-weight:600;margin-top:2px;text-transform:uppercase">Record pts</div><div style="font-size:10px;color:var(--td);margin-top:2px">Islande + 10 reb · Efficiency 30</div></div>
+      </div>
+
+      <!-- Parcours -->
+      <div class="h2 gold" style="margin-bottom:10px">🗺️ Parcours International</div>
+      <div class="card" style="margin-bottom:14px">
+        <div class="row"><span style="font-size:20px;flex-shrink:0;width:28px;text-align:center">🇺🇸</span><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--t)">USA — NCAA Portland State</div><div style="font-size:11px;color:var(--td)">Big Sky Conference · Diplômé 2015 · Big Sky Player of the Week</div><div style="font-size:11px;color:var(--g);margin-top:2px;font-style:italic">Master Communication & Marketing</div></div></div>
+        <div class="row"><span style="font-size:20px;flex-shrink:0;width:28px;text-align:center">🇫🇷</span><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--t)">France — Betclic Elite / ProB / NM1</div><div style="font-size:11px;color:var(--td)">Limoges U21 · Châlons-Reims · Rouen NM1</div></div></div>
+        <div class="row"><span style="font-size:20px;flex-shrink:0;width:28px;text-align:center">🇬🇷</span><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--t)">Grèce — Psyhiko (2016)</div><div style="font-size:11px;color:var(--td)">Division professionnelle grecque</div></div></div>
+        <div class="row"><span style="font-size:20px;flex-shrink:0;width:28px;text-align:center">🇮🇸</span><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--t)">Islande — Grindavik Express League</div><div style="font-size:11px;color:var(--td)">Record : 24 pts / 10 reb · Efficiency 30 (2018)</div></div></div>
+        <div class="row"><span style="font-size:20px;flex-shrink:0;width:28px;text-align:center">🇷🇴</span><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--t)">Roumanie — Division pro</div><div style="font-size:11px;color:var(--td)">Expérience est-européenne</div></div></div>
+        <div class="row"><span style="font-size:20px;flex-shrink:0;width:28px;text-align:center">🌍</span><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--t)">Côte d'Ivoire 🇨🇮 — Équipe Nationale</div><div style="font-size:11px;color:var(--td)">Coupe du Monde FIBA · Représentation internationale</div></div></div>
+      </div>
+
+      <!-- 5 Business -->
+      <div class="h2 gold" style="margin-bottom:10px">🏗️ Mes 5 Business</div>
+      <div class="card" style="margin-bottom:14px">
+        <div class="row"><span style="font-size:20px;flex-shrink:0;width:28px;text-align:center">🚗</span><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--t)">Location de voiture</div><div style="font-size:11px;color:var(--td)">Flotte, contrats, assurances, clients particuliers et entreprises</div></div><span class="badge" style="background:rgba(255,255,255,.06);color:var(--td);border:1px solid rgba(255,255,255,.1);flex-shrink:0">Fermé</span></div>
+        <div class="row"><span style="font-size:20px;flex-shrink:0;width:28px;text-align:center">🍽️</span><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--t)">Restaurant</div><div style="font-size:11px;color:var(--td)">Gestion d'équipe, fournisseurs, hygiène HACCP, service client</div></div><span class="badge" style="background:rgba(255,255,255,.06);color:var(--td);border:1px solid rgba(255,255,255,.1);flex-shrink:0">Fermé</span></div>
+        <div class="row"><span style="font-size:20px;flex-shrink:0;width:28px;text-align:center">📦</span><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--t)">Import / Export marchandises</div><div style="font-size:11px;color:var(--td)">Sourcing, logistique, douanes, relations fournisseurs internationaux</div></div><span class="badge" style="background:rgba(255,255,255,.06);color:var(--td);border:1px solid rgba(255,255,255,.1);flex-shrink:0">Fermé</span></div>
+        <div class="row"><span style="font-size:20px;flex-shrink:0;width:28px;text-align:center">📣</span><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--t)">Consultant Marketing</div><div style="font-size:11px;color:var(--td)">SIRET : 892 943 689 · Conseil communication & stratégie pour PME</div></div><span class="badge badge-ok" style="flex-shrink:0">✅ Actif</span></div>
+        <div class="row"><span style="font-size:20px;flex-shrink:0;width:28px;text-align:center">🧹</span><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--t)">Société de Ménage</div><div style="font-size:11px;color:var(--td)">SIRET : 928 738 954 · 4 ans · 1000+ sessions · Hôtels, commerces, particuliers</div></div><span class="badge badge-ok" style="flex-shrink:0">✅ Actif</span></div>
+        <div style="margin-top:8px;padding:8px 10px;background:var(--gd);border-radius:8px;font-size:11px;color:var(--g)">💡 5 business = 5 secteurs maîtrisés = formateur pluridisciplinaire unique en France</div>
+      </div>
+
+      <!-- Légitimité -->
+      <div class="h2 gold" style="margin-bottom:10px">⚖️ Suis-je légitime ? Certifications</div>
+      <div class="card card-gold" style="margin-bottom:12px">
+        <div style="font-size:12px;color:var(--ok);font-weight:600;margin-bottom:8px">✅ OUI — Tu peux vendre tes formations MAINTENANT</div>
+        <div style="font-size:12px;color:var(--tm);line-height:1.7;margin-bottom:12px">Avec ton SIRET actif, tu peux légalement vendre des formations en préparation mentale et coaching sportif. Ton expérience pro de 15 ans EST ta légitimité.</div>
+        <div class="row"><span style="font-size:18px;flex-shrink:0;width:24px;text-align:center">🎓</span><div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--t)">Certification RS6785 — Prépa Mentale</div><div style="font-size:11px;color:var(--td)">preparation-mentale.com · 100% en ligne · ✅ CPF · France Compétences</div></div><span class="badge badge-g" style="flex-shrink:0">Priorité</span></div>
+        <div class="row"><span style="font-size:18px;flex-shrink:0;width:24px;text-align:center">📋</span><div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--t)">Déclaration DREETS</div><div style="font-size:11px;color:var(--td)">Après 1ère convention → NDA → registre officiel · Gratuit</div></div><span class="badge badge-ac" style="flex-shrink:0">Obligatoire</span></div>
+        <div class="row"><span style="font-size:18px;flex-shrink:0;width:24px;text-align:center">✅</span><div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--t)">Qualiopi</div><div style="font-size:11px;color:var(--td)">Mois 3-4 → accès CPF, OPCO, moncompteformation.gouv.fr</div></div><span class="badge badge-g" style="flex-shrink:0">Mois 3-4</span></div>
+      </div>
+      <div class="card card-blue">
+        <div style="font-size:11px;color:var(--ac);font-weight:600;margin-bottom:6px">💡 Stratégie recommandée</div>
+        <div style="font-size:12px;color:var(--tm);line-height:1.8"><strong style="color:var(--t)">Maintenant :</strong> Vendre directement clubs/entreprises avec ton SIRET.<br><strong style="color:var(--t)">Mois 1-2 :</strong> RS6785 Prépa Mentale (CPF · 0€ de ta poche).<br><strong style="color:var(--t)">Mois 2-3 :</strong> DREETS → NDA → facturation légale complète.<br><strong style="color:var(--t)">Mois 4 :</strong> Qualiopi → moncompteformation.gouv.fr → CPF automatique.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div id="nav">
+    <button class="nav-btn active" onclick="goPage('dashboard')" id="nav-dashboard"><span class="ni">⚡</span><span class="nl">Dashboard</span></button>
+    <button class="nav-btn" onclick="goPage('formations')" id="nav-formations"><span class="ni">📚</span><span class="nl">Formations</span></button>
+    <button class="nav-btn" onclick="goPage('library')" id="nav-library"><span class="ni">🗂️</span><span class="nl">Centres</span></button>
+    <button class="nav-btn" onclick="goPage('assistant')" id="nav-assistant"><span class="ni">🤖</span><span class="nl">Assistant</span></button>
+    <button class="nav-btn" onclick="goPage('roadmap')" id="nav-roadmap"><span class="ni">🎯</span><span class="nl">Roadmap</span></button>
+    <button class="nav-btn" onclick="goPage('profile')" id="nav-profile"><span class="ni">🏀</span><span class="nl">Profil</span></button>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════
+
+const KB = {
+  organisme:"🏢 CRÉER TON ORGANISME\n\n1. Auto-entreprise (gratuit, 3-7 jours)\n   → autoentrepreneur.urssaf.fr · Code APE : 85.59A\n\n2. 1ère formation obligatoire avant DREETS\n   → 2h min · programme + émargement + attestation\n\n3. Déclarer DREETS (gratuit, 30 jours)\n   → mon.formationprofessionnelle.fr · Cerfa n°10782\n\n4. NDA automatique → Format IDF : 11 75 XXXXX 75\n\n5. Qualiopi mois 3-4 (1500-3000€)\n\n💡 Coût total démarrage : 0€",
+  cpf:"🔍 FORMATIONS CPF EN IDF\n\n🧯 SST Sauveteur Secouriste — 2j — 250-400€ — ✅ CPF\n🚪 Incendie — 1j — 150-300€\n🏗️ Travail en Hauteur — 1j — 200-350€\n🤝 Gestion des Conflits — 1-2j — 400-800€ — ✅ CPF\n🎓 Formateur FPA — 2-5j — 800-1500€ — ✅ CPF\n🧘 Gestes PRAP — 2j — 300-500€ — ✅ CPF\n💬 CNV — 2j — 500-1500€ — ✅ CPF\n\n→ moncompteformation.gouv.fr\n\n💡 Avec 1500€ CPF :\nCNV (600€) + SST (300€) + Gestes PRAP (400€) = 1300€",
+  cnv:"💬 FORMATION CNV\n\nCommunication Non Violente — Marshall Rosenberg\n✅ CPF éligible · Certification disponible\n\nOù se former :\n→ La Coop CNV : lacoopcnv.com (⭐ 100% réussite)\n→ CNV Formations : cnvformations.fr (modules 1/2/3)\n→ M2I Formation : 1595€ · 2 jours\n\n4 étapes OSBD :\n1. Observation (sans jugement)\n2. Sentiment (ce que je ressens)\n3. Besoin (ce dont j'ai besoin)\n4. Demande (concrète et réalisable)\n\nCertification CPF : 'Dialoguer avec la CNV pour mieux coopérer'",
+  dreets:"🏛️ DREETS\n\n→ Déclarer APRÈS ta 1ère formation, AVANT de facturer\n→ Délai : 3 mois après ta 1ère convention signée\n→ Site : mon.formationprofessionnelle.fr\n→ Formulaire : Cerfa n°10782\n\nDocuments à joindre :\n• SIRET · Programme · Émargement · CV · Facture\n\nDélai traitement : 30 jours · Coût : 0€",
+  nda:"📋 NDA\n\nAttribué automatiquement après validation DREETS.\nFormat IDF : 11 75 XXXXX 75\n\nObligatoire sur :\n✅ Factures · Conventions · Supports · Programmes\n\nSans NDA → illégal de facturer",
+  opco:"💼 OPCO\n\n1. Ton client identifie son OPCO\n2. Tu envoies convention + programme AVANT\n3. OPCO finance (souvent 100%)\n4. Tu factures l'OPCO directement\n\nOPCO sport : AFDAS (clubs pro)\nOPCO ménage : AKTO (hôtellerie-propreté)",
+  qualiopi:"✅ QUALIOPI\n\nObligatoire pour : CPF · OPCO · France Travail\n\n1. Choisir certificateur (Bureau Veritas, Afnor...)\n2. Audit blanc → Audit certification → Certificat 3 ans\n\nCoût : 1500-3000€ · Délai : 2-4 mois\nÀ viser : mois 3-4",
+  sst:"🧯 SST\n\n• 2 jours (14h) · ✅ CPF · 250-400€\n• Certification INRS / Croix-Rouge\n• Recyclage MAC SST : 7h tous les 24 mois\n\nBusiness :\n→ Dispenser SST en entreprise : 600-1200€/session\n→ Centres : FMS 01 48 20 10 00 · FIRE Sarcelles",
+  tarifs:"💰 TARIFS\n\nStandard :\nFormation 3h groupe      : 1200€ HT\nFormation 1 jour         : 2400€ HT\nCoaching manager         :  250€/h\n\nMénage (terrain) :\nGroupe 8-14 pers. (2j)   : 1200€ HT\n\nSport & Mental :\nMindset Champion (4h)    : 1800€ HT\nELITE 360° (2j)          : 4500€ HT\nCoaching athlète         :  350€/h\n\n→ 4 sessions std × 1200€ = 4800€/mois",
+  faq_sst:"🧯 FAQ SST\n\nQ: Différence SST et PSC1 ?\n→ SST : salariés entreprise (INRS) · PSC1 : grand public\n\nQ: Combien de SST par entreprise ?\n→ 1 SST pour 10 salariés (INRS recommandation)\n\nQ: Durée certification ?\n→ 24 mois. Recyclage MAC SST : 7h obligatoire\n\nQ: Centres proches ?\n→ FMS Saint-Denis 01 48 20 10 00 ✅ CPF\n→ F.I.R.E. Sarcelles fire-formations.com ✅ CPF",
+  faq_incendie:"🔥 FAQ Incendie\n\nQ: Durée formation ?\n→ Sensibilisation : 2-4h · Formation complète : 1 jour\n\nQ: Obligatoire en entreprise ?\n→ Oui. Art. R4227-38 Code du travail\n\nQ: Combien facturer ?\n→ Sensibilisation 3h : 600-1000€\n\nQ: Centres proches ?\n→ FMS 01 48 20 10 00 · ALERTIS 01 84 60 08 20",
+  faq_cpf:"💳 FAQ CPF\n\nQ: Combien ai-je sur mon CPF ?\n→ moncompteformation.gouv.fr (FranceConnect)\n\nQ: Accumulation des droits ?\n→ 500€/an (temps plein) · Plafond 5000€\n\nQ: Formation éligible CPF ?\n→ Certification inscrite au RNCP ou RS\n\nQ: Qualiopi obligatoire pour CPF ?\n→ Oui, depuis janvier 2022",
+  faq_conflits:"🤝 FAQ Conflits\n\nQ: Agrément nécessaire ?\n→ Non. Expertise management/RH suffit.\n\nQ: Qui achète cette formation ?\n→ DRH, responsables formation, managers\n\nQ: Financement CPF possible ?\n→ Oui avec certification RS inscrite France Compétences\n\nQ: Nombre participants ?\n→ 8-12 personnes optimal",
+  "5000":"🎯 ROADMAP 5000€/MOIS\n\nMois 1 → SIRET + DREETS + 1ère formation\nMois 2 → NDA + 30 emails + 1ère session\nMois 3-4 → 3-5 sessions/mois + OPCO\nMois 5-6 → Qualiopi + CPF + e-learning\n\n4 sessions × 1200€ = 4800€/mois"
+};
+
+function detectIntent(txt) {
+  const t = txt.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+  if (t.match(/organisme|siret|creer|urssaf|demarrer/)) return "organisme";
+  if (t.match(/faq.*cpf|question.*cpf|eligible/)) return "faq_cpf";
+  if (t.match(/cpf|compte personnel|solde/)) return "cpf";
+  if (t.match(/cnv|communication non.?violente/)) return "cnv";
+  if (t.match(/dreets|declaration.?activite/)) return "dreets";
+  if (t.match(/nda|numero.?declaration/)) return "nda";
+  if (t.match(/opco|financement/)) return "opco";
+  if (t.match(/qualiopi|certifi/)) return "qualiopi";
+  if (t.match(/faq.*sst|question.*sst/)) return "faq_sst";
+  if (t.match(/sst|secouriste/)) return "sst";
+  if (t.match(/faq.*incendie|question.*incendie/)) return "faq_incendie";
+  if (t.match(/faq.*conflit|question.*conflit/)) return "faq_conflits";
+  if (t.match(/tarif|prix|facturer/)) return "tarifs";
+  if (t.match(/5000|10000|revenu|objectif/)) return "5000";
+  return null;
+}
+
+async function webSearch(q) {
+  try {
+    const r = await fetch("https://api.duckduckgo.com/?q="+encodeURIComponent(q+" formation professionnelle France")+"&format=json&no_html=1&skip_disambig=1");
+    const d = await r.json();
+    const p = [];
+    if (d.Answer) p.push(d.Answer);
+    if (d.AbstractText && d.AbstractText.length>30) p.push(d.AbstractText.slice(0,350));
+    (d.RelatedTopics||[]).slice(0,2).forEach(t=>{ if(t.Text&&t.Text.length>10) p.push("• "+t.Text.slice(0,120)); });
+    return p.length ? p.join("\n\n") : null;
+  } catch { return null; }
+}
+
+// ═══════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════
+let state = {
+  page: 'dashboard',
+  checked: JSON.parse(localStorage.getItem('fp_checked')||'{}'),
+  saved: JSON.parse(localStorage.getItem('fp_saved')||'{}'),
+  formTab: 'standard',
+  roadTab: 'plan',
+  libCat: 'Tous',
+  docTab: 'att',
+  venteTab: 'email',
+  expandedOrg: null,
+  expandedModule: null,
+  org:'', trainer:'', ftitle:'', fdate:'',
+  chatBusy: false
+};
+
+function saveState() {
+  localStorage.setItem('fp_checked', JSON.stringify(state.checked));
+  localStorage.setItem('fp_saved', JSON.stringify(state.saved));
+}
+
+function chk(id) {
+  state.checked[id] = !state.checked[id];
+  saveState();
+  renderCheckboxes();
+  updateProgress();
+}
+
+function toggleSave(id) {
+  state.saved[id] = !state.saved[id];
+  saveState();
+  renderLib();
+  updateSavedBadge();
+}
+
+// ═══════════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════════
+function goPage(p) {
+  state.page = p;
+  document.querySelectorAll('.page, .page-flex').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+  const pg = document.getElementById('page-'+p);
+  const nb = document.getElementById('nav-'+p);
+  if (pg) pg.classList.add('active');
+  if (nb) nb.classList.add('active');
+  // Render dynamic content
+  if (p==='library') renderLib();
+  if (p==='roadmap') renderRoadmap();
+  if (p==='formations') renderFormations();
+  if (p==='assistant') renderChips();
+}
+
+// ═══════════════════════════════════════════════════════
+// FORMATIONS DATA
+// ═══════════════════════════════════════════════════════
+const FORMATIONS = [
+  // STANDARD
+  {id:"conflits",icon:"🤝",title:"Gestion des Conflits",sub:"Sensibilisation 3h",price:"1 200€ HT",color:"#C9A84C",cat:"standard",
+   tagline:"Transformer les tensions en leviers de performance",
+   public:"Managers, équipes RH, collaborateurs — tout secteur",
+   legal:"Aucun agrément obligatoire.",
+   youtube:[{title:"CNV en pratique — Marshall Rosenberg",url:"https://www.youtube.com/results?search_query=communication+non+violente+rosenberg+français"},{title:"Gestion des conflits en entreprise",url:"https://www.youtube.com/results?search_query=gestion+conflits+entreprise+formation"}],
+   objectifs:["Identifier les 3 types de conflits en entreprise","Comprendre les 4 stades d'escalade","Maîtriser la méthode OSBD de la CNV","Adopter une posture assertive","Construire un plan d'action préventif"],
+   modules:[
+     {num:"01",title:"Introduction — Le Conflit",duree:"20 min",contenu:"Tour de table · Définition : conflit ≠ désaccord · Les 3 types : personnes, rôles, intérêts · Impact : jusqu'à 30% de perte de productivité · Auto-évaluation profil",methode:"Brise-glace · Discussion guidée"},
+     {num:"02",title:"Comprendre les Mécanismes",duree:"50 min",contenu:"Les 4 stades d'escalade · Les déclencheurs : stress, rôles flous · La CNV (Marshall Rosenberg) : OSBD · 3 postures : Fuite / Attaque / Assertivité",methode:"Apport théorique · Exemples concrets"},
+     {num:"03",title:"Pratique — Outils Concrets",duree:"50 min",contenu:"Reformulation active en binôme avec OSBD · Jeu de rôle A : manager/collaborateur · Jeu de rôle B : conflit entre collègues · Carte des émotions · Débriefing",methode:"Jeux de rôle · Feedback croisé"},
+     {num:"04",title:"Études de Cas Réels",duree:"30 min",contenu:"Cas 1 : conflit silencieux · Cas 2 : collaborateur agressif · Restitution en sous-groupes",methode:"Travail en sous-groupes · Discussion"},
+     {num:"05",title:"Évaluation & Plan d'Action",duree:"30 min",contenu:"Quiz QCM 10 questions · Fiche plan d'action : 3 changements dès demain · Attestations",methode:"QCM · Fiche individuelle · Attestation"},
+   ],
+   tarifs:{"Groupe 8-12 pers.":"1 200€ HT","Journée complète":"2 400€ HT","Coaching individuel":"250€/h"},
+   arguments:["Tous les managers en ont besoin — marché énorme","Aucun agrément → démarrer immédiatement","CNV + Master Communication = expertise unique"]},
+
+  {id:"incendie",icon:"🔥",title:"Évacuation & Incendie",sub:"Sensibilisation 3h",price:"900€ HT",color:"#E05555",cat:"standard",
+   tagline:"Préparer chaque salarié à agir vite et bien",
+   public:"Tout salarié — obligation légale",
+   legal:"Art. R4227-38 Code du travail : exercice évacuation annuel obligatoire.",
+   youtube:[{title:"Formation évacuation incendie — procédures",url:"https://www.youtube.com/results?search_query=formation+evacuation+incendie+entreprise"},{title:"Utilisation extincteur — technique PASS",url:"https://www.youtube.com/results?search_query=utilisation+extincteur+technique+PASS"}],
+   objectifs:["Connaître la réglementation incendie","Maîtriser les rôles guide-file et serre-file","Coordonner une évacuation","Utiliser correctement un extincteur","Identifier les risques"],
+   modules:[
+     {num:"01",title:"Réglementation & Obligations",duree:"25 min",contenu:"Code du travail · Catégories ERP · Plan de prévention incendie · L'exercice annuel obligatoire · Sanctions",methode:"Présentation · Support visuel"},
+     {num:"02",title:"Rôles & Responsabilités",duree:"40 min",contenu:"Guide-file : ouvrir les issues, diriger · Serre-file : fermer les portes, compter · Équipier première intervention · Chaîne d'alerte · Point de rassemblement",methode:"Mise en situation verbale"},
+     {num:"03",title:"Procédures d'Évacuation",duree:"35 min",contenu:"Lecture du plan d'évacuation · Issues de secours · Déclenchement alarme · Gestion PMR · Conduite en cas de fumée",methode:"Exercice pratique sur plan"},
+     {num:"04",title:"Manipulation des Extincteurs",duree:"30 min",contenu:"Classes de feu : A/B/C · Types extincteurs · Technique PASS : Pointer, Actionner, Balayer, Stopper · Distances de sécurité",methode:"Démonstration · Manipulation"},
+     {num:"05",title:"Bilan & Plan d'Action",duree:"10 min",contenu:"Quiz · Points d'amélioration · Plan d'action collectif · Attestations",methode:"QCM · Attestation"},
+   ],
+   tarifs:{"Groupe 8-15 pers.":"900€ HT","Journée + extincteurs":"1 800€ HT","Renouvellement annuel":"600€ HT"},
+   arguments:["Toutes les entreprises sont légalement obligées","Renouvellement annuel = client récurrent","Package Incendie + SST = 2500€ la journée"]},
+
+  {id:"postures",icon:"🧘",title:"Gestes & Postures",sub:"Sensibilisation 3h",price:"900€ HT",color:"#4CAF82",cat:"standard",
+   tagline:"Prévenir les TMS et réduire l'absentéisme",
+   public:"Logistique, BTP, santé, bureaux",
+   legal:"PRAP : certification INRS recommandée. Aucun agrément pour sensibilisation.",
+   youtube:[{title:"Gestes et postures au travail — prévention TMS",url:"https://www.youtube.com/results?search_query=gestes+postures+travail+prevention+TMS"},{title:"Ergonomie poste de travail bureau",url:"https://www.youtube.com/results?search_query=ergonomie+poste+travail+bureau+prévention"}],
+   objectifs:["Comprendre les mécanismes des TMS","Identifier les postures à risque","Appliquer l'économie articulaire","Maîtriser la manutention manuelle","Proposer des améliorations ergonomiques"],
+   modules:[
+     {num:"01",title:"Introduction aux TMS",duree:"25 min",contenu:"TMS = 1ère cause de maladie pro en France (87%) · Zones touchées : dos, épaules, poignets · Facteurs de risque physiques, organisationnels",methode:"Présentation · Auto-évaluation"},
+     {num:"02",title:"Anatomie & Biomécanique",duree:"35 min",contenu:"La colonne vertébrale : 3 courbures naturelles · Pression selon postures : debout 100 / assis droit 140 / penché 180+ · Articulations sensibles",methode:"Schémas anatomiques"},
+     {num:"03",title:"Techniques de Manutention",duree:"50 min",contenu:"Principes d'économie articulaire : dos droit, charges proches, genoux fléchis · Lever de charge en 5 étapes · Manutention en équipe · Aides techniques",methode:"Démonstration · Pratique en binôme"},
+     {num:"04",title:"Ergonomie du Poste",duree:"30 min",contenu:"Bureau : réglage siège, écran à hauteur des yeux · Poste debout : antifatigue · Pauses actives : 3 min toutes les heures",methode:"Audit express · Fiche d'amélioration"},
+     {num:"05",title:"Engagement & Suivi",duree:"10 min",contenu:"Quiz · 3 changements dès demain · Guide étirements offert · Attestations",methode:"QCM · Guide offert · Attestation"},
+   ],
+   tarifs:{"Groupe 8-15 pers.":"900€ HT","Formation PRAP complète":"2 000€ HT"},
+   arguments:["ROI : 1€ investi = 2.20€ économisés (INRS)","TMS = 1ère cause de maladie pro → argument DRH fort","Renouvellement tous les 3-5 ans"]},
+
+  {id:"sst",icon:"🧯",title:"SST — Premiers Secours",sub:"Formation 14h (2 jours)",price:"1 500€ HT",color:"#4A7CFF",cat:"standard",
+   tagline:"Former les acteurs de sécurité qui protègent leur équipe",
+   public:"Tout salarié. 1 SST pour 10 salariés (INRS). Certificat 24 mois.",
+   legal:"Certification INRS/Croix-Rouge. Pour devenir formateur SST : agrément INRS obligatoire.",
+   youtube:[{title:"Gestes de premiers secours — RCP et DAE",url:"https://www.youtube.com/results?search_query=premiers+secours+RCP+DAE+formation"},{title:"Position latérale de sécurité (PLS)",url:"https://www.youtube.com/results?search_query=position+laterale+securite+PLS+formation"}],
+   objectifs:["Maîtriser la conduite à tenir face à un accident","Alerter efficacement les secours","Pratiquer RCP sur mannequin","Utiliser un DAE","Contribuer à la prévention"],
+   modules:[
+     {num:"01",title:"Le Sauveteur Secouriste",duree:"20 min",contenu:"Rôle et cadre juridique · La chaîne des secours · 3 missions : Protéger, Alerter, Secourir",methode:"Présentation · Vidéos"},
+     {num:"02",title:"Protéger & Alerter",duree:"40 min",contenu:"Examiner la situation : dangers (électricité, feu, gaz) · Baliser · Alerte : 15/18/112 · Informations à transmettre",methode:"Exercice d'alerte en binôme"},
+     {num:"03",title:"Secourir — Gestes Essentiels",duree:"90 min",contenu:"Bilan : conscience → respiration · Inconscient qui respire : PLS · Ne respire pas : RCP (30 + 2) · Saignement : compression 10 min · Obstruction : Heimlich",methode:"Démonstration · Mannequin · Rotation"},
+     {num:"04",title:"Défibrillateur (DAE)",duree:"30 min",contenu:"Fibrillation ventriculaire · Séquence : RCP → DAE → continuer · Utilisation pas à pas · Cas particuliers : enfant, grossesse",methode:"Démonstration · Pratique DAE"},
+     {num:"05",title:"Prévention & Certification",duree:"20 min",contenu:"Accidents évitables · Signalement · Document Unique (DUERP) · Quiz · Certificat SST valable 24 mois",methode:"QCM · Certificat INRS"},
+   ],
+   tarifs:{"Groupe 8-12 pers. (2j)":"1 500€ HT","MAC SST recyclage (7h)":"700€ HT"},
+   arguments:["Obligation légale — toutes les entreprises","Recyclage 24 mois = client récurrent","Package Incendie + SST = 2200€ la journée"]},
+
+  // MÉNAGE
+  {id:"menage",icon:"🧹",title:"Agent d'Entretien Professionnel",sub:"Formation terrain 2 jours (14h)",price:"1 200€ HT",color:"#06B6D4",cat:"menage",
+   tagline:"Les bons gestes, les bons produits — service irréprochable",
+   public:"Agents d'entretien, hôtels, commerces, conciergeries, particuliers. Format TERRAIN : appartement, hôtel, gymnase ou commerce partenaire.",
+   legal:"Aucun agrément obligatoire. Financement : OPCO Akto (hôtellerie-propreté).",
+   youtube:[{title:"Techniques de nettoyage professionnel",url:"https://www.youtube.com/results?search_query=techniques+nettoyage+professionnel+formation"},{title:"Formation agent de propreté — méthodes",url:"https://www.youtube.com/results?search_query=formation+agent+proprete+methode+professionnelle"},{title:"Recapitulatif hygiène et sécurité ménage",url:"https://www.youtube.com/results?search_query=hygiene+securite+ménage+professionnel+produits"}],
+   objectifs:["Maîtriser les techniques pro de nettoyage par surface","Choisir et utiliser correctement les produits","Appliquer hygiène, sécurité et prévention TMS","Gérer son temps et organiser ses interventions","Adopter le comportement professionnel en clientèle"],
+   modules:[
+     {num:"01",title:"Fondamentaux du Métier",duree:"90 min",contenu:"Présentation du métier : débouchés, secteurs, réglementation · Types de locaux : bureau, hôtel, commerce, particulier · Hygiène de base : lavage des mains, tenue, EPI · Code de déontologie : discrétion, respect, ponctualité · Vocabulaire professionnel · Normes HACCP secteurs alimentaires",methode:"Présentation · Échanges · Quiz vocabulaire"},
+     {num:"02",title:"Produits, Matériel & Sécurité",duree:"90 min",contenu:"Lecture des étiquettes et fiches de données de sécurité (FDS) · Familles de produits : détergents, désinfectants, détartrants, décapants · Risques chimiques : ne JAMAIS mélanger certains produits · Règle des 5 familles de surfaces : verre, plastique, inox, bois, textile · Dosages corrects : économique et écologique · Entretien du matériel · EPI obligatoires",methode:"Démonstration produits · Lecture étiquettes · Exercice dosage"},
+     {num:"03",title:"Techniques de Nettoyage par Zone",duree:"120 min",contenu:"BUREAUX : dépoussiérage humide de haut en bas, de propre à sale · Écrans, claviers, téléphones · SANITAIRES : protocole désinfection WC, lavabos, robinetterie · SOLS : balayage humide, lavage à plat, technique serpentin · VITRES : méthode professionnelle au racloir · CHAMBRES HÔTEL : méthode de refaire un lit (bounce test), gestion du linge, check-list sortie de chambre · CUISINE : respect zones propre/sale",methode:"Démonstration formateur · Pratique en binôme · Correction posture"},
+     {num:"04",title:"Organisation & Productivité",duree:"60 min",contenu:"Préparer son chariot avant intervention · Lire et suivre un planning · Estimation des temps par type de local · Priorités quand le temps manque · Communication avec le responsable et le client · Gérer les imprévus (tache difficile, client présent) · Fiche de passage et traçabilité · Retour client : gérer une réclamation",methode:"Mise en situation · Jeu de rôle client mécontent"},
+     {num:"05",title:"Gestes & Postures — Prévenir les TMS",duree:"60 min",contenu:"TMS spécifiques au métier d'agent d'entretien : dos, épaules, genoux · Techniques ergonomiques : posture pour passer la serpillère, frotter, soulever un seau · Manche à longueur adaptée · Alterner les tâches · Pauses actives : 3 min toutes les heures · Chaussures antidérapantes · Check-list équipement idéal",methode:"Pratique avec matériel réel · Corrections posturales"},
+     {num:"06",title:"Spécialités & Évaluation",duree:"60 min",contenu:"NETTOYAGE HAUTE PRESSION : protocoles et sécurité · DÉTACHAGE TEXTILE : selon fibre et type de tache · VITRERIE HAUTEUR : perche télescopique · CONCIERGERIE HÔTEL : service au client, discrétion, extras · Check-list finale par type de local · Quiz QCM · Attestations",methode:"Démonstration spécialités · QCM · Attestation"},
+   ],
+   tarifs:{"Groupe 8-14 pers. (2j)":"1 200€ HT","Groupe 4-7 pers.":"800€ HT","Module recyclage 1j":"500€ HT"},
+   arguments:["4 ans d'activité · 1000+ sessions = expertise incontestable","OPCO Akto finance jusqu'à 100%","Marché : 500 000 agents d'entretien en France","Renouvellement constant = client récurrent"]},
+
+  // SPORT
+  {id:"mindset",icon:"🧠",title:"Mindset de Champion",sub:"Performance mentale · 4h",price:"1 800€ HT groupe",color:"#C9A84C",cat:"sport",
+   tagline:"De la pensée limitante à la performance de haut niveau",
+   public:"Sportifs haut niveau, équipes pro, académies, clubs",
+   science:"Sources : Carol Dweck (Stanford) · NCAA Mental Health Study 2021 · Csikszentmihalyi (Flow)",
+   youtube:[{title:"Growth Mindset — Carol Dweck TED Talk",url:"https://www.youtube.com/results?search_query=carol+dweck+growth+mindset+ted+talk"},{title:"Préparation mentale athlètes de haut niveau",url:"https://www.youtube.com/results?search_query=préparation+mentale+sport+haut+niveau+france"}],
+   objectifs:["Reprogrammer les croyances limitantes","Maîtriser les outils des équipes olympiques","Construire une routine pré-compétition","Gérer la pression et les échecs","Développer une identité d'athlète solide"],
+   modules:[
+     {num:"01",title:"Le Cerveau de l'Athlète",duree:"45 min",contenu:"Neurosciences du sport : cortisol vs dopamine · Cerveau limbique vs cortex préfrontal · Théorie Yerkes-Dodson · Profil mental (questionnaire AMS-3) · État de flow de Csikszentmihalyi",methode:"Test profil mental · Discussion",exemples:"Kobe Bryant · Steph Curry · Usain Bolt"},
+     {num:"02",title:"Reprogrammer ses Croyances",duree:"60 min",contenu:"Growth Mindset (Dweck, Stanford) · Identifier ses croyances limitantes · Reframing cognitif (TCC) · Affirmations d'identité · Journal des victoires : 3 réussites/jour",methode:"Exercice individuel · Coaching collectif",exemples:"LeBron James · Simone Biles"},
+     {num:"03",title:"Préparation Mentale Pratique",duree:"60 min",contenu:"Visualisation sportive (protocole Lang 2000) · Mindfulness en sport (JAMA 2014 : -43% anxiété) · Respiration 4-7-8 (Dr Andrew Weil) · Créer sa routine pré-match · Ancrage émotionnel positif",methode:"Pratique guidée · Visualisation collective",exemples:"Warriors · Djokovic · Nadal"},
+     {num:"04",title:"Résilience & Gestion de l'Échec",duree:"45 min",contenu:"Reframer l'échec comme feedback · 3 réponses à l'adversité (Seligman) · Technique après-match sans auto-destruction · Courbe psychologique de la blessure",methode:"Études de cas · Plan de résilience",exemples:"Kevin Durant · Curry · Derrick Rose"},
+     {num:"05",title:"Plan Mental Personnalisé",duree:"30 min",contenu:"Mental Performance Plan individuel (format NBA) · 3 habitudes cette semaine · Journal de performance · Attestations",methode:"Coaching express · Fiche MPP",exemples:"Protocoles USOC · Warriors"},
+   ],
+   tarifs:{"Groupe 8-15 pers.":"1 800€ HT","Coaching individuel":"350€/h","Package saison":"800€/mois"},
+   arguments:["35% des athlètes élites : anxiété/dépression (NCAA 2021)","AFDAS finance pour clubs pro","Toi = ex-pro 5 continents = crédibilité inattaquable"]},
+
+  {id:"depression",icon:"🌱",title:"La Dépression du Champion",sub:"Santé mentale athlète · 3h",price:"2 000€ HT",color:"#4CAF82",cat:"sport",
+   tagline:"Sortir de l'ombre quand on a toujours été sous les projecteurs",
+   public:"Athlètes pro, anciens sportifs en reconversion, staffs médicaux",
+   science:"Sources : British J Sports Med 2019 · NCAA 2021 · IOC Consensus 2019 · NBA Mind Matters",
+   youtube:[{title:"Kevin Love — santé mentale dans le sport pro",url:"https://www.youtube.com/results?search_query=kevin+love+mental+health+basketball"},{title:"Simone Biles — préparation mentale et pression",url:"https://www.youtube.com/results?search_query=simone+biles+mental+health+olympics"}],
+   objectifs:["Comprendre la dépression chez l'athlète","Briser la culture du silence","Identifier les signaux d'alerte","Connaître les ressources de soutien","Construire un filet de sécurité émotionnel"],
+   modules:[
+     {num:"01",title:"La Face Cachée du Champion",duree:"40 min",contenu:"35% des athlètes élites : dépression/anxiété (NCAA 2021) · La culture du 'sois fort' · Différence tristesse / burn-out / dépression clinique · Témoignages qui ont changé le sport",methode:"Vidéos · Espace de parole",exemples:"Kevin Love · DeMar DeRozan · Naomi Osaka"},
+     {num:"02",title:"Neurobiologie & Facteurs de Risque",duree:"45 min",contenu:"Impact de la blessure sur l'identité (Br J Sports Med 2019) · 35% des retraités sportifs : signes dépressifs dans les 2 ans · Surentraînement et dépression : lien neurobiologique",methode:"Apport théorique · Auto-évaluation",exemples:"André Agassi · Ricky Williams"},
+     {num:"03",title:"Sortir de l'Ombre — Outils",duree:"50 min",contenu:"Déconstruire la honte · Thérapies prouvées : TCC, EMDR, ACT · Méditation (JAMA 2014 : -38% anxiété) · À qui parler : psychologue du sport, INSEP",methode:"Atelier · Respiration · Carte du soutien",exemples:"Protocoles NBA Mind Matters"},
+     {num:"04",title:"Aider Sans Remplacer le Spécialiste",duree:"30 min",contenu:"Reconnaître un coéquipier en détresse · Mots qui aident vs mots qui blessent · Règle des 3 présences · Quand orienter vers un professionnel",methode:"Jeux de rôle · Guide du bon soutien"},
+     {num:"05",title:"Ma Boussole de Vie",duree:"15 min",contenu:"Identité plurielle : athlète ET être humain · Les 5 piliers · Premier pas cette semaine · Attestations",methode:"Fiche 'Ma Boussole' · Coaching collectif"},
+   ],
+   tarifs:{"Groupe 8-15 pers.":"2 000€ HT","Coaching individuel":"450€/h"},
+   arguments:["Aucun concurrent sur ce créneau","Fédérations ont obligation légale de suivi santé mentale","Marché : INSEP, clubs Pro A, staffs médicaux"]},
+
+  {id:"elite360",icon:"🏆",title:"ELITE 360° — Performance Totale",sub:"Formation complète · 2 jours (14h)",price:"4 500€ HT",color:"#FFD700",cat:"sport",
+   tagline:"Le programme tout-en-un pour performer au plus haut niveau et durer",
+   public:"Équipes professionnelles, sélections nationales, académies élites",
+   science:"IOC Consensus 2019 · USOC Mental Health Protocol · Nixdorf et al. 2013 · APA Guidelines",
+   youtube:[{title:"Mental performance training NBA — behind the scenes",url:"https://www.youtube.com/results?search_query=NBA+mental+performance+training+sport+psychology"},{title:"Préparation mentale équipe de France sport",url:"https://www.youtube.com/results?search_query=preparation+mentale+equipe+france+sport+collectif"}],
+   objectifs:["Construire une identité d'athlète robuste","Maîtriser tous les outils de performance mentale","Prévenir la dépression sportive","Développer une résilience extraordinaire","Créer une culture d'équipe gagnante","Préparer sa reconversion"],
+   modules:[
+     {num:"J1M",title:"JOUR 1 Matin — Fondations Mentales",duree:"3h",contenu:"Neurosciences · Profil mental AMS-3 · Growth Mindset (Dweck) · Croyances limitantes → reframing · Visualisation (protocole Lang 2000) · Mindfulness sportive · Respiration box breathing · Ancrage émotionnel · Routine pré-compétition individualisée\n\n🌟 Thèmes ELITE 360° : Stress et niveau d'activation · Connaissance de soi · Discours interne · Concentration · Motivation",methode:"Diagnostic individuel · Pratique guidée",exemples:"Protocoles USOC · Warriors · Équipe de France Basketball"},
+     {num:"J1S",title:"JOUR 1 Après-midi — Santé Mentale & Cohésion",duree:"1h30",contenu:"35% athlètes élites touchés (NCAA 2021) · Témoignages · Signaux d'alerte · Burn-out vs dépression · Culture de soutien dans l'équipe\n\n🌟 Thèmes ELITE 360° : Cohésion d'équipe · Confiance et estime de soi",methode:"Vidéos · Espace parole sécurisé",exemples:"Kevin Love · Naomi Osaka · Simone Biles"},
+     {num:"J2M",title:"JOUR 2 Matin — Résilience & Adversité",duree:"3h",contenu:"Gestion de la pression compétitive · Après-match sans auto-destruction · Courbe psychologique de la blessure · Plan de retour blessure · Gestion des réseaux sociaux\n\n🌟 Thèmes ELITE 360° : Routines sportives · Gestion des défaites · Communication d'équipe",methode:"Études de cas · Jeux de rôle",exemples:"Kevin Durant · Curry · Derrick Rose"},
+     {num:"J2S",title:"JOUR 2 Après-midi — Vie & Reconversion",duree:"1h30",contenu:"Corps après la performance · Sommeil et récupération (lien direct performance) · Identité plurielle : athlète ET être humain · Plan 90 jours post-carrière\n\n🌟 Thèmes ELITE 360° : Rôle du sommeil · Vie saine après le sport · Équilibre de vie",methode:"Roue de la vie · Plan 90 jours",exemples:"NFL Legends · NBA Alumni"},
+     {num:"CERT",title:"Certification & Plan Final",duree:"1h",contenu:"Mental Performance Plan individualisé (4 pages) · Charte de bien-être d'équipe · Q&R · Attestations et certificats",methode:"Coaching express · Document MPP"},
+   ],
+   tarifs:{"Groupe 8-15 pers.":"4 500€ HT","Groupe 16-25 pers.":"7 000€ HT","Coaching individuel":"500€/h","Package saison mensuel":"1 500€/mois"},
+   arguments:["IOC 2019 : santé mentale = pilier de la performance","120 clubs pro en France + fédérations + INSEP","AFDAS finance 100% pour clubs pro","1 club → 10 recommandations dans le milieu"]},
+
+  // SKILLS
+  {id:"bestformateur",icon:"🎤",title:"Devenir le Meilleur Formateur",sub:"Masterclass Formateur · 1 jour (7h)",price:"1 400€ HT",color:"#F59E0B",cat:"skills",
+   tagline:"Maîtriser l'art de former — posture, voix, engagement, impact mémorable",
+   public:"Formateurs débutants ou en activité, coachs, speakers souhaitant passer au niveau supérieur",
+   legal:"Aucun agrément obligatoire. Peut mener vers la certification FPA (RNCP niveau 5).",
+   youtube:[{title:"Les secrets d'un formateur captivant — TED approach",url:"https://www.youtube.com/results?search_query=formateur+captivant+techniques+engagement+pédagogie"},{title:"Comment utiliser sa voix comme formateur",url:"https://www.youtube.com/results?search_query=voix+formateur+techniques+diction+pédagogie"},{title:"Gérer un groupe difficile en formation",url:"https://www.youtube.com/results?search_query=gérer+groupe+difficile+formation+professionnelle"}],
+   objectifs:["Maîtriser la posture physique et l'autorité naturelle","Développer une voix engageante et un débit adapté","Concevoir des programmes mémorables (méthode 70/20/10)","Gérer un groupe difficile, les silences et les conflits","Créer l'expérience apprenante qui donne envie de revenir"],
+   modules:[
+     {num:"01",title:"La Posture du Formateur d'Exception",duree:"90 min",
+      contenu:"Un bon formateur ne s'improvise pas — il se construit consciemment, geste par geste, regard par regard.\n\nLes 7 postures physiques qui inspirent confiance : être debout, ancré dans ses deux pieds, éviter de se balancer ou de croiser les bras · Où se positionner dans la salle : le triangle de présence (avant, côtés, fond) selon le message à passer · Mouvement et énergie : se déplacer avec intention, pas par nervosité · Le regard : balayer lentement le groupe, s'arrêter 2 secondes par personne, ne jamais parler au tableau · Les gestes ouverts (paumes visibles) vs gestes fermés (bras croisés, mains dans les poches) · Tenue vestimentaire et image professionnelle : cohérence avec ton public · Exercice miroir en binôme : observer et corriger sa posture spontanée",
+      methode:"Démonstration directe · Exercice miroir · Feedback croisé en binôme · Enregistrement vidéo si possible",
+      exemples:"Techniques issues des grands speakers TED · Steve Jobs Keynote Apple · Méthode des acteurs de théâtre appliquée à la formation"},
+     {num:"02",title:"La Voix comme Outil Pédagogique",duree:"80 min",
+      contenu:"Ta voix EST ton outil principal. Elle peut captiver, endormir ou libérer l'intelligence de tes stagiaires.\n\nLes 4 dimensions de la voix : volume (projeter sans crier), débit (ralentir pour les points clés, accélérer pour l'énergie), ton (varier pour éviter la monotonie), articulation (chaque syllabe est audible) · Quand monter la voix : pour créer de l'énergie, marquer une transition · Quand baisser la voix : pour signaler l'importance, créer de l'intimité avec le groupe · Les silences stratégiques : la technique des 5 secondes après une question — supporte l'inconfort, laisse le groupe réfléchir · Éliminer les tics verbaux : 'euh', 'donc', 'voilà', 'c'est-à-dire' · Exercices de diction : tongue twisters, projection · L'auto-écoute : s'enregistrer pour s'améliorer",
+      methode:"Enregistrement audio · Exercices de projection · Analyse collective · Tongue twisters professionnels"},
+     {num:"03",title:"Concevoir des Sessions Mémorables",duree:"90 min",
+      contenu:"Une formation dont on se souvient encore 6 mois après, ça se design, pas ça s'improvise.\n\nLa méthode 70/20/10 : 70% pratique et mise en situation, 20% échanges entre pairs, 10% théorie et apports du formateur · L'arc narratif d'une formation : accroche puissante (les 5 premières minutes sont cruciales) → développement progressif → ancrage final · Les 5 premières minutes : comment capturer l'attention immédiatement (question provocatrice, chiffre choc, histoire personnelle) · Varier les modalités : exercice solo, binôme, sous-groupe, plénière — ne jamais rester sur un même format plus de 20 minutes · Supports visuels efficaces : règle des 6 mots par slide, utilisation de schémas vs texte · Clore une session : les 3 techniques d'ancrage mémoriel (résumé en 3 mots, engagement public, action immédiate)",
+      methode:"Atelier de conception · Présentation croisée de 5 minutes · Feedback structuré",
+      exemples:"Méthode Feynman · Design thinking pédagogique · Storytelling appliqué à la formation"},
+     {num:"04",title:"Gérer un Groupe & les Situations Difficiles",duree:"60 min",
+      contenu:"Chaque groupe cache ses défis — le formateur d'exception les transforme en opportunités pédagogiques.\n\nTypologies de participants : le dominant (prend trop de place), le muet (ne participe jamais), le sceptique ('c'est pas applicable chez nous'), le perturbateur (parle à son voisin, décroche) · Techniques de recadrage sans conflit : nommer le comportement sans juger la personne · Comment relancer quelqu'un qui ne participe pas : question directe non menaçante · Gérer une question à laquelle tu n'as pas la réponse : 3 façons de rebondir sans perdre la face · Le conflit entre participants : technique de la médiation expresse · Les digressions : technique du 'parking' (noter la question pour après) · Adapter son rythme en temps réel : lire les signaux non-verbaux du groupe",
+      methode:"Jeux de rôle · Mises en situation · Débriefing collectif"},
+     {num:"05",title:"L'Après-Formation — Fidéliser et Recommander",duree:"60 min",
+      contenu:"La fin de la formation est le début d'une relation commerciale longue durée.\n\nQuestionnaire de satisfaction : le rendre utile, pas cosmétique — 5 questions max, une question ouverte obligatoire · Recueillir des témoignages vidéo puissants : les 3 questions magiques à poser juste après la formation · Le suivi post-formation qui crée la fidélité : un email 30 jours après avec 1 ressource bonus · Comment transformer un client en ambassadeur : le script de la demande de recommandation · Construire sa réputation de formateur : témoignages, LinkedIn, cas clients · Personal branding formateur sur LinkedIn : profil, posts hebdomadaires, réseau ciblé · Le portfolio formateur : programmes, témoignages, photos (sur le terrain compte double pour Tiegbe)",
+      methode:"Atelier portfolio · Templates témoignages · Plan de suivi email · Script recommandation"},
+   ],
+   tarifs:{"Groupe 6-12 pers.":"1 400€ HT","Coaching individuel 2h":"300€/h","Package 3 séances coaching":"750€"},
+   arguments:["Toi = formateur TERRAIN unique (appartement, hôtel, gymnase) — argument de différenciation fort","Tous les formateurs débutants cherchent ce type de formation","Peut être vendu comme prérequis à tes autres formations","Upsell naturel : après cette formation, les gens veulent suivre tes autres programmes"]},
+
+  {id:"coachpro",icon:"🏀",title:"Coach Amateur → Coach Professionnel",sub:"Montée en compétence · 2 jours (14h)",price:"1 600€ HT",color:"#E05555",cat:"skills",
+   tagline:"Élever son niveau pour avoir des joueurs qui progressent vraiment",
+   public:"Coachs amateurs, éducateurs sportifs, bénévoles souhaitant se professionnaliser",
+   legal:"Aucun agrément obligatoire. Financement AFDAS pour clubs affiliés.",
+   youtube:[{title:"Philosophie de coaching Phil Jackson — triangle offense",url:"https://www.youtube.com/results?search_query=phil+jackson+coaching+philosophy+basketball"},{title:"Popovich — comment construire une culture d'équipe",url:"https://www.youtube.com/results?search_query=gregg+popovich+team+culture+coaching+spurs"}],
+   objectifs:["Structurer une séance d'entraînement efficace","Développer le mindset et la culture d'équipe","Créer des exercices techniques mémorables","Communiquer avec autorité et bienveillance","Gérer les parents, les conflits et la motivation"],
+   modules:[
+     {num:"01",title:"L'ADN du Coach Professionnel",duree:"90 min",contenu:"La différence entre un coach amateur et un pro : posture, préparation, communication · Les 5 piliers d'un coaching de qualité · Auto-évaluation ton style actuel · Psychologie du joueur selon l'âge (U10 à Senior) · Fixer des objectifs SMART · La charte d'équipe : construire ensemble les règles",methode:"Auto-évaluation · Discussion · Charte collective",exemples:"Phil Jackson · Gregg Popovich · Tony Parker"},
+     {num:"02",title:"Structurer des Séances Efficaces",duree:"120 min",contenu:"La structure en 4 temps : échauffement spécifique + technique individuelle + exercice collectif + match situation · Progression pédagogique : du simple au complexe · 10 exercices fondamentaux · Adapter la séance en temps réel · Créer des concurrences saines",methode:"Démonstration terrain · Pratique guidée · Debrief"},
+     {num:"03",title:"Élever le Mindset de ses Joueurs",duree:"90 min",contenu:"Growth Mindset appliqué au basketball amateur · Technique du sandwich (positif-correctif-positif) · Gestion des erreurs : transformer les ratés en apprentissage · Développer la confiance des joueurs timides · Les rituels d'équipe qui créent l'identité collective",methode:"Jeux de rôle coach/joueur · Exercice feedback"},
+     {num:"04",title:"Cohésion d'Équipe — Jeux & Situations",duree:"90 min",contenu:"10 jeux de cohésion utilisés par les équipes pro · Challenge de confiance · Exercice communication forcée · Compétitions en équipes mixtes pour briser les clans · La gestion du groupe sur la durée d'une saison",methode:"Pratique des jeux · Mise en situation"},
+     {num:"05",title:"Gérer Parents, Conflits & Motivation",duree:"60 min",contenu:"Les parents toxiques : comment les cadrer sans conflit · Réunion parents en début de saison (template) · Conflit entre joueurs : médiation en 4 étapes · Le joueur qui veut partir · Gérer une série de défaites",methode:"Études de cas · Jeux de rôle"},
+     {num:"06",title:"Plan de Développement Coach",duree:"30 min",contenu:"Construction de son plan 6 mois · Ressources recommandées · Fiche suivi joueur template · Attestation",methode:"QCM · Fiche plan · Attestation"},
+   ],
+   tarifs:{"Groupe 6-15 pers. (2j)":"1 600€ HT","Module 1j intensif":"900€ HT","Coaching terrain":"280€/h"},
+   arguments:["500 000 licenciés basket · 80% encadrés par bénévoles","AFDAS finance pour clubs FFBB affiliés","Toi = ex-pro 5 continents = argument inattaquable","Upsell : ELITE 360° pour leurs joueurs"]},
+
+  {id:"clubpro",icon:"🏟️",title:"Club Amateur → Structure Pro",sub:"Développement de club · 2 jours (14h)",price:"2 000€ HT",color:"#8B5CF6",cat:"skills",
+   tagline:"Transformer un club amateur en structure qui génère des revenus",
+   public:"Présidents de club, dirigeants, trésoriers, coordinateurs sportifs",
+   legal:"Formation déductible fiscalement pour associations. Financement AFDAS possible.",
+   youtube:[{title:"Comment gérer un club sportif amateur",url:"https://www.youtube.com/results?search_query=gestion+club+sportif+amateur+revenus+financement"},{title:"Organiser un camp de basket rentable",url:"https://www.youtube.com/results?search_query=organiser+camp+basket+basketball+rentable+france"}],
+   objectifs:["Professionnaliser la structure administrative","Créer des sources de revenus passifs","Sélectionner des coachs avec le mindset pro","Nouer des partenariats fournisseurs","Organiser des événements générateurs de revenus"],
+   modules:[
+     {num:"01",title:"Diagnostiquer sa Structure",duree:"90 min",contenu:"Audit express : gouvernance, finances, sportif, communication · Les 5 piliers d'un club qui dure · Structurer son bureau · Digitaliser son club : outils gratuits (HelloAsso, Spond) · Plan de développement 3 ans",methode:"Audit collectif · Carte mentale · Priorisation"},
+     {num:"02",title:"Recruter des Coachs avec le Mindset Pro",duree:"90 min",contenu:"Profil idéal du coach à recruter · Questions clés en entretien · Détecter le mindset pro : signaux et red flags · Processus d'intégration · Charte du coach · Évaluation en cours de saison",methode:"Recrutement simulé · Jeux de rôle"},
+     {num:"03",title:"Générer des Revenus Passifs",duree:"120 min",contenu:"Les 7 sources de revenus d'un club rentable · Buvette : organisation, tarifs, rentabilité · Tournois homologués FFBB · Camps de basket : 3 jours = 200-500€/participant · Location du gymnase · Vente de produits club (POD) · Partenariats locaux",methode:"Business plan revenus · Exercice chiffrage"},
+     {num:"04",title:"Partenariats Fournisseurs & Équipements",duree:"60 min",contenu:"Contacter les marques (Nike, Adidas, Errea, Joma) · Négocier des tarifs préférentiels · Nike Team Sports et équivalents · Créer son maillot sur mesure à bas coût · Kit approche sponsors locaux",methode:"Templates emails · Négociation simulée"},
+     {num:"05",title:"Développement des Jeunes — U7 à Senior",duree:"90 min",contenu:"Parcours du joueur en club · Curriculum technique par catégorie d'âge (FIBA) · Garder ses meilleurs joueurs · Relation avec les familles · Partenariat école/collège pour recruter",methode:"Parcours joueur visuel · Ateliers par catégorie"},
+     {num:"06",title:"Plan d'Action 12 Mois",duree:"30 min",contenu:"Plan d'action 12 mois · Budget prévisionnel · Calendrier événements · Ressources · Attestations",methode:"Plan d'action · Template budget · Attestation"},
+   ],
+   tarifs:{"Groupe 5-12 dirigeants (2j)":"2 000€ HT","Coaching dirigeant":"350€/h","Accompagnement mensuel":"500€/mois"},
+   arguments:["4 000 clubs basket en France = marché énorme","Aucun formateur ne propose ça aux dirigeants","AFDAS finance pour salariés de clubs professionnels","Upsell : Coach Pro + ELITE 360° pour leurs joueurs"]},
+];
+
+// ═══════════════════════════════════════════════════════
+// LIBRARY
+// ═══════════════════════════════════════════════════════
+const LIBRARY = [
+  {id:"fms",name:"FMS — Formation Management Sécurité",zone:"Saint-Denis",dist:"0 km",adresse:"175 Bd Anatole France, 93200 Saint-Denis",tel:"01 48 20 10 00",web:"fms-formation.com",qualiopi:true,cpf:true,formations:["SST / MAC SST","Incendie / Évacuation","SSIAP 1/2/3","Gestes & Postures","Travail en Hauteur"],note:"7 salles · 480m² · Face métro L13 Carrefour Pleyel.",color:"#C9A84C"},
+  {id:"alertis",name:"ALERTIS",zone:"Saint-Denis",dist:"0 km",adresse:"Saint-Denis 93 (intra)",tel:"01 84 60 08 20",web:"alertis.fr",qualiopi:true,cpf:true,formations:["SST / MAC SST","Gestes & Postures","Incendie","PRAP IBC & 2S","Risques Psychosociaux"],note:"Pédagogie interactive. Intra-entreprise uniquement.",color:"#E05555"},
+  {id:"dataos",name:"DATAOS",zone:"Saint-Denis",dist:"0 km",adresse:"Saint-Denis 93 (face Mairie)",tel:"01 83 62 52 49",web:"dataos.com",qualiopi:true,cpf:true,formations:["SST / MAC SST","SSIAP 1/2/3","TFP-APS Agent Sécurité"],note:"CPF · France Travail · Région IDF. Avis Google excellents.",color:"#4A7CFF"},
+  {id:"fiducial",name:"FIDUCIAL FPSG ⭐",zone:"Saint-Denis",dist:"1 km",adresse:"Près Stade de France, 93200 Saint-Denis",tel:"01 49 21 15 15",web:"fiducial-fpsg.fr",qualiopi:true,cpf:true,formations:["SST","Incendie / Évacuation","Gestes & Postures","Gestion des Conflits 7h","Travail en Hauteur","SSIAP 1/2/3"],note:"2700m² · Propose Gestion des conflits 7h · Top choix !",color:"#4CAF82",top:true},
+  {id:"pointbleu",name:"Point Bleu Formation",zone:"Saint-Denis",dist:"1 km",adresse:"2 Allée de Seine, 93200 Saint-Denis",tel:"01 48 09 23 45",web:"pointbleu-formation.fr",qualiopi:true,cpf:true,formations:["SST / MAC SST","Incendie / Extincteurs","Gestes & Postures","Travail en Hauteur","Habilitation Électrique"],note:"35 ans d'expérience · Agréments INRS, UFACS.",color:"#8B5CF6"},
+  {id:"spformation",name:"Sécurité Premium Formation",zone:"Saint-Denis",dist:"0-10 km",adresse:"Interventions 93 intra",tel:"05 49 01 61 23",web:"spformation.fr",qualiopi:true,cpf:false,formations:["SST / MAC SST","Gestes & Postures PRAP","Incendie","Gestion Conflits","Risques Psychosociaux"],note:"Formateurs anciens SDIS/BSPP · Intra uniquement.",color:"#F59E0B"},
+  {id:"protectup",name:"Protectup Formation",zone:"Saint-Denis / 95",dist:"0-15 km",adresse:"93 & Val d'Oise (95)",tel:"01 48 35 12 00",web:"protectup.fr",qualiopi:true,cpf:true,formations:["SST / MAC SST","CACES","Incendie","Gestes & Postures","Formation Formateurs SST"],note:"Académie des formateurs intégrée.",color:"#06B6D4"},
+  {id:"fire",name:"F.I.R.E. Formations ⭐",zone:"Sarcelles",dist:"8 km",adresse:"Sarcelles, 95200",tel:"Sur site web",web:"fire-formations.com",qualiopi:true,cpf:true,formations:["SST / Secourisme","Incendie & Évacuation","Gestion du Stress","Habilitation Électrique H0B0"],note:"⭐ CPF · Très bien noté · Formateurs passionnés.",color:"#EF4444",top:true},
+  {id:"tvf95",name:"Trouvez Votre Formation 95",zone:"Sarcelles / Val d'Oise",dist:"8 km",adresse:"Sarcelles & Cergy-Pontoise (95)",tel:"01 60 06 08 10",web:"trouvezvotreformation.com",qualiopi:true,cpf:true,formations:["SST / MAC SST","CACES","Gestes & Postures PRAP","Travail en Hauteur","Formation Formateurs"],note:"Multi-centres 95. CPF. CACES + sécurité + formateurs.",color:"#10B981"},
+  {id:"afps",name:"AFPS — Prévention & Secourisme",zone:"Val d'Oise (Osny)",dist:"12 km",adresse:"Osny, Val d'Oise 95",tel:"01 30 31 68 00",web:"afpsecourisme.fr",qualiopi:true,cpf:true,formations:["SST / MAC SST","Gestes & Postures","Habilitation Électrique","Incendie / Extincteurs"],note:"Inter-entreprises en salle (Osny) + intra. Tarifs attractifs.",color:"#0EA5E9"},
+  {id:"coopcnv",name:"La Coop CNV ⭐",zone:"Paris / Distanciel",dist:"En ligne",adresse:"Paris + IDF + distanciel",tel:"Sur site web",web:"lacoopcnv.com",qualiopi:true,cpf:true,formations:["CNV Communication Non Violente","Certification CPF CNV","Médiation CNV"],note:"⭐ 100% réussite certification · 4.69/5 · Priorité absolue !",color:"#C9A84C",top:true},
+  {id:"m2icnv",name:"M2I Formation — CNV",zone:"Paris / Distanciel",dist:"En ligne",adresse:"Paris La Défense + en ligne",tel:"01 84 16 00 26",web:"m2iformation.fr",qualiopi:true,cpf:true,formations:["CNV Communication Non Violente","Gestion des Conflits","Communication Interpersonnelle"],note:"2 jours · 1595€ HT · CPF · Classes à distance.",color:"#8B5CF6"},
+];
+
+const LIB_CATS = ["Tous","✅ CPF","⭐ Top","Saint-Denis","Sarcelles","SST","Incendie","Gestes","Conflits / CNV","Sauvegardés"];
+
+// ═══════════════════════════════════════════════════════
+// ROADMAP DATA
+// ═══════════════════════════════════════════════════════
+const ROADMAP = [
+  {id:"p1",title:"Phase 1 — Structurer",sub:"Semaines 1-3 · 0€",color:"#C9A84C",icon:"🏗️",steps:[["r1","Créer l'auto-entreprise → autoentrepreneur.urssaf.fr"],["r2","Code APE : 85.59A (Formation continue adultes)"],["r3","Recevoir le SIRET (3-7 jours)"],["r4","Préparer la 1ère formation (programme 2h min.)"],["r5","Réaliser la 1ère formation : émargement + attestation + facture"],["r6","Déposer Cerfa n°10782 sur mon.formationprofessionnelle.fr"]]},
+  {id:"p2",title:"Phase 2 — Lancer",sub:"Mois 2 · Objectif : 500-1500€",color:"#4A7CFF",icon:"🚀",steps:[["r7","Recevoir le NDA (Numéro de Déclaration d'Activité)"],["r8","S'inscrire CNV → lacoopcnv.com (CPF priorité 1)"],["r9","S'inscrire SST → FMS 01 48 20 10 00 (CPF priorité 2)"],["r10","Créer profil LinkedIn formateur professionnel"],["r11","Préparer les 4 documents officiels"],["r12","Contacter 3 hôtels IDF pour formation ménage"],["r13","Vendre et dispenser sa 1ère session payante"]]},
+  {id:"p3",title:"Phase 3 — Accélérer",sub:"Mois 3-4 · Objectif : 2500-4000€",color:"#4CAF82",icon:"📈",steps:[["r14","3 sessions vendues au prix plein (1200€)"],["r15","Collecter 3 témoignages clients (vidéo ou écrit)"],["r16","Contacter un OPCO pour premiers dossiers"],["r17","Lancer la démarche Qualiopi (choisir certificateur)"],["r18","Proposer formation sport à 1 club ou académie"],["r19","Certification RS6785 Prépa Mentale → preparation-mentale.com"]]},
+  {id:"p4",title:"Phase 4 — Scaler",sub:"Mois 5-6 · Objectif : 10 000€+",color:"#8B5CF6",icon:"🎯",steps:[["r20","Qualiopi obtenue"],["r21","1er dossier OPCO financé et clôturé"],["r22","5+ sessions régulières par mois"],["r23","ELITE 360° vendue à un club pro (AFDAS finance)"],["r24","Module e-learning en ligne (revenu passif)"],["r25","10 000€/mois atteints 🎉"]]},
+  {id:"cpf",title:"💳 Plan CPF 1500€",sub:"Dans l'ordre de priorité",color:"#FFD700",icon:"💳",steps:[["cpf1","✅ CNV — lacoopcnv.com · ~600€ · Certification CPF + Master Communication = super-combo"],["cpf2","✅ SST Sauveteur Secouriste · ~300€ · INRS · Dispenser 600-1200€/session"],["cpf3","✅ Gestes & Postures PRAP · ~400€ · BTP/logistique/santé"],["cpf4","💡 Total ~1300€ → reste 200€ pour matériel pédagogique"]]},
+  {id:"legal",title:"⚖️ Obligations Légales",sub:"Documents à avoir à jour",color:"#E05555",icon:"📋",steps:[["l1","Convention de formation — signée AVANT chaque formation"],["l2","Programme détaillé — remis au stagiaire AVANT"],["l3","Feuille d'émargement — signée PENDANT"],["l4","Attestation de formation — remise APRÈS"],["l5","Questionnaire de satisfaction — APRÈS (obligatoire Qualiopi)"],["l6","Facture : mention TVA exonérée Art. 261-4-4° CGI"]]},
+];
+
+const ACTIONS = [
+  ["a1","Vérifier solde CPF → moncompteformation.gouv.fr"],
+  ["a2","S'inscrire CNV → lacoopcnv.com (priorité 1 — CPF)"],
+  ["a3","Appeler FMS 01 48 20 10 00 pour SST (CPF)"],
+  ["a4","Créer auto-entreprise → autoentrepreneur.urssaf.fr (Code APE 85.59A)"],
+  ["a5","Contacter 3 hôtels IDF pour formation ménage"],
+  ["a6","Poster sur LinkedIn : 'Ex-joueur pro + formateur disponible'"],
+  ["a7","Préparer 4 documents officiels (Convention, Émargement, Attestation, Satisfaction)"],
+  ["a8","Appeler FIDUCIAL FPSG 01 49 21 15 15 → partenariat Conflits"],
+];
+
+const QUICK_CHIPS = [
+  ["🏢 Organisme","Comment créer mon organisme de formation ?"],
+  ["🔍 CPF","Quelles formations CPF passer avec 1500€ ?"],
+  ["💬 CNV","Formation CNV communication non violente CPF ?"],
+  ["❓ FAQ SST","FAQ formation SST questions fréquentes"],
+  ["❓ FAQ CPF","FAQ compte personnel de formation CPF"],
+  ["❓ Incendie","FAQ formation incendie et évacuation"],
+  ["📋 DREETS","Comment faire la déclaration DREETS ?"],
+  ["💼 OPCO","Comment faire financer par les OPCO ?"],
+  ["💰 Tarifs","Quels tarifs pour mes formations ?"],
+];
+
+// ═══════════════════════════════════════════════════════
+// RENDER FUNCTIONS
+// ═══════════════════════════════════════════════════════
+
+function updateProgress() {
+  const total = ROADMAP.reduce((a,s)=>a+s.steps.length,0);
+  const done = Object.values(state.checked).filter(Boolean).length;
+  const pct = Math.round((done/total)*100);
+  document.getElementById('pct-badge').textContent = pct+'%';
+}
+
+function updateSavedBadge() {
+  const n = Object.values(state.saved).filter(Boolean).length;
+  const el = document.getElementById('saved-badge');
+  if (n > 0) { el.textContent = '⭐ '+n; el.style.display='inline'; }
+  else el.style.display='none';
+}
+
+function renderCheckboxes() {
+  const el = document.getElementById('actions-list');
+  if (!el) return;
+  el.innerHTML = ACTIONS.map(([id,txt])=>`
+    <div class="row" style="cursor:pointer" onclick="chk('${id}')">
+      <div class="chk ${state.checked[id]?'on':''}">${state.checked[id]?'✓':''}</div>
+      <span style="font-size:12px;color:${state.checked[id]?'var(--td)':'var(--tm)'};text-decoration:${state.checked[id]?'line-through':'none'};line-height:1.5">${txt}</span>
+    </div>
+  `).join('');
+}
+
+function renderFormations() {
+  const el = document.getElementById('form-content');
+  if (!el) return;
+  const list = FORMATIONS.filter(f=>f.cat===state.formTab);
+  if (state.formTab==='standard') {
+    el.innerHTML = `<div class="mono dim" style="font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px">Tap pour voir le programme complet</div>`+list.map(f=>formCard(f)).join('');
+  } else if (state.formTab==='menage') {
+    el.innerHTML = `<div class="card" style="border:1px solid rgba(6,182,212,.2);background:rgba(6,182,212,.04);margin-bottom:14px"><div class="h2" style="color:#06B6D4;margin-bottom:4px">🧹 Ménage & Entretien Professionnel</div><div style="font-size:12px;color:var(--tm);line-height:1.6;margin-bottom:7px">Basé sur <strong style="color:#06B6D4">4 ans · 1000+ sessions</strong> en hôtels, commerces, conciergeries et particuliers. <strong style="color:#06B6D4">Format TERRAIN</strong> : appartement, hôtel, gymnase ou commerce partenaire — pas en salle.</div><div style="display:flex;gap:5px;flex-wrap:wrap"><span class="badge" style="background:rgba(6,182,212,.1);color:#06B6D4;border:1px solid rgba(6,182,212,.3)">Hôtellerie · Commerce · Conciergerie</span><span class="badge badge-ok">OPCO Akto finance</span></div></div>`+list.map(f=>formCard(f)).join('');
+  } else if (state.formTab==='sport') {
+    el.innerHTML = `<div class="card card-gold" style="margin-bottom:14px"><div class="h2 gold" style="margin-bottom:4px">🏆 Sport & Santé Mentale</div><div style="font-size:12px;color:var(--tm);line-height:1.6;margin-bottom:7px">Formations basées sur des études scientifiques. Créneau unique. <strong class="gold">AFDAS finance pour les clubs pro.</strong></div><div style="display:flex;gap:5px;flex-wrap:wrap"><span class="badge badge-g">NBA · Football · Rugby</span><span class="badge badge-ok">AFDAS finance</span></div></div>`+list.map(f=>formCard(f)).join('');
+  } else if (state.formTab==='skills') {
+    el.innerHTML = `<div class="card" style="border:1px solid rgba(245,158,11,.2);background:rgba(245,158,11,.04);margin-bottom:14px"><div class="h2" style="color:#F59E0B;margin-bottom:4px">⚡ Formations SKILLS — Unique en France</div><div style="font-size:12px;color:var(--tm);line-height:1.6">Basé sur ton expérience unique : ex-joueur pro 5 continents + entrepreneur + formateur. <strong style="color:#F59E0B">Aucun concurrent en France.</strong></div></div>`+list.map(f=>formCard(f)).join('');
+  }
+}
+
+function formCard(f) {
+  const ytLinks = (f.youtube||[]).map(y=>`<a href="${y.url}" target="_blank" class="yt-link"><span class="yt-icon">▶️</span><span>${y.title}</span></a>`).join('');
+  return `<div class="card" style="cursor:pointer;border-left:3px solid ${f.color};margin-bottom:12px" onclick="showFormDetail('${f.id}')">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+      <div><span style="font-size:20px">${f.icon}</span> <span class="h2">${f.title}</span></div>
+      <span class="h3" style="color:${f.color}">${f.price.split('·')[0].split('groupe')[0].trim()}</span>
+    </div>
+    <div style="font-size:11px;color:var(--td);margin-bottom:8px">${f.sub}</div>
+    <div style="font-size:12px;color:var(--tm);font-style:italic;margin-bottom:8px">"${f.tagline}"</div>
+    <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px">${f.modules.map(m=>`<span class="badge" style="background:${f.color}15;color:${f.color};border:1px solid ${f.color}30">${m.num} · ${m.title}</span>`).join('')}</div>
+    ${ytLinks}
+    <div style="font-size:11px;color:var(--td);margin-top:6px">Voir programme complet →</div>
+  </div>`;
+}
+
+// ── FORMATION DETAIL ──
+let currentFormDetail = null;
+function showFormDetail(id) {
+  const f = FORMATIONS.find(x=>x.id===id);
+  if (!f) return;
+  currentFormDetail = f;
+  const el = document.getElementById('form-content');
+  const ytLinks = (f.youtube||[]).map(y=>`<a href="${y.url}" target="_blank" class="yt-link"><span class="yt-icon">▶️</span><span>${y.title}</span></a>`).join('');
+  
+  el.innerHTML = `
+    <button class="btn-o" style="margin-bottom:12px;width:100%" onclick="renderFormations()">← Retour aux formations</button>
+    <div style="background:linear-gradient(135deg,${f.color}15,var(--d3));border:1px solid ${f.color}30;border-radius:12px;padding:13px 15px;margin-bottom:12px">
+      <div style="font-size:13px;color:${f.color};font-style:italic;margin-bottom:5px">"${f.tagline}"</div>
+      <div style="font-size:11px;color:var(--td);margin-bottom:4px">👥 ${f.public}</div>
+      ${f.legal?`<div style="font-size:11px;color:var(--tm)">⚖️ ${f.legal}</div>`:''}
+      ${f.science?`<div style="font-size:11px;color:var(--ac);margin-top:4px">🔬 ${f.science}</div>`:''}
+    </div>
+    ${f.arguments?`<div class="card" style="border-left:3px solid var(--g);margin-bottom:12px"><div style="font-size:11px;color:var(--td);text-transform:uppercase;letter-spacing:.07em;margin-bottom:7px">💰 Pourquoi c'est vendable</div>${f.arguments.map(a=>`<div class="row"><span style="color:var(--g);flex-shrink:0">→</span><span style="font-size:12px;color:var(--tm)">${a}</span></div>`).join('')}</div>`:''}
+    ${f.tarifs?`<div class="card" style="border-left:3px solid ${f.color};margin-bottom:12px"><div style="font-size:11px;color:var(--td);text-transform:uppercase;letter-spacing:.07em;margin-bottom:7px">💶 Tarification</div>${Object.entries(f.tarifs).map(([k,v])=>`<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04)"><span style="font-size:12px;color:var(--tm)">${k}</span><span style="font-size:12px;color:var(--g);font-weight:700">${v}</span></div>`).join('')}</div>`:''}
+    <div class="card" style="margin-bottom:12px"><div style="font-size:11px;color:var(--td);text-transform:uppercase;margin-bottom:8px">🎯 Objectifs pédagogiques</div>${f.objectifs.map(o=>`<div style="display:flex;gap:8px;margin-bottom:6px"><span style="color:${f.color};flex-shrink:0">✦</span><span style="font-size:12px;color:var(--tm);line-height:1.5">${o}</span></div>`).join('')}</div>
+    <div style="font-size:11px;color:var(--td);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">📋 Programme détaillé</div>
+    ${f.modules.map((m,i)=>`
+      <div class="module-card" style="border-left-color:${currentFormDetail&&state.expandedModule===f.id+m.num?f.color:'transparent'}" onclick="toggleModule('${f.id+m.num}',this)">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div style="display:flex;gap:9px;align-items:center">
+            <div style="width:28px;height:28px;border-radius:6px;background:${f.color}18;border:1px solid ${f.color}35;display:flex;align-items:center;justify-content:center;font-weight:700;color:${f.color};font-size:11px;flex-shrink:0">${m.num}</div>
+            <div><div style="font-size:13px;font-weight:600;color:var(--t)">${m.title}</div><div class="mono" style="font-size:10px;color:var(--g)">⏱ ${m.duree}</div></div>
+          </div>
+          <span class="arr">›</span>
+        </div>
+        <div class="module-body" id="mod-${f.id+m.num}">
+          <div style="font-size:10px;color:var(--td);text-transform:uppercase;margin-bottom:4px">Contenu</div>
+          <div style="font-size:12px;color:var(--tm);line-height:1.7;margin-bottom:8px;white-space:pre-wrap">${m.contenu}</div>
+          <div style="font-size:10px;color:var(--td);text-transform:uppercase;margin-bottom:4px">Méthode pédagogique</div>
+          <div style="font-size:12px;color:var(--ok);margin-bottom:${m.exemples?'8px':'0'}">${m.methode}</div>
+          ${m.exemples?`<div style="font-size:10px;color:var(--td);text-transform:uppercase;margin-bottom:4px">Exemples réels</div><div style="font-size:12px;color:var(--g);font-style:italic">${m.exemples}</div>`:''}
+        </div>
+      </div>
+    `).join('')}
+    ${ytLinks?`<div style="margin:12px 0"><div style="font-size:11px;color:var(--td);text-transform:uppercase;margin-bottom:8px">▶️ Vidéos de référence YouTube</div>${ytLinks}</div>`:''}
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;margin-bottom:24px">
+      <button class="btn-g" style="flex:1" onclick="copyProgram('${f.id}')">📋 Copier le programme</button>
+    </div>
+  `;
+}
+
+function toggleModule(key, cardEl) {
+  const body = document.getElementById('mod-'+key);
+  if (!body) return;
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open');
+  const arr = cardEl.querySelector('.arr');
+  if (arr) arr.style.transform = isOpen ? 'none' : 'rotate(90deg)';
+  cardEl.style.borderLeftColor = isOpen ? 'transparent' : (currentFormDetail ? currentFormDetail.color : '#C9A84C');
+}
+
+function copyProgram(id) {
+  const f = FORMATIONS.find(x=>x.id===id);
+  if (!f) return;
+  const txt = `PROGRAMME — ${f.title}\n${f.sub} · ${f.price}\n\n"${f.tagline}"\nPublic : ${f.public}\n\nOBJECTIFS :\n${f.objectifs.map(o=>"• "+o).join("\n")}\n\nPROGRAMME :\n${f.modules.map(m=>`\nMODULE ${m.num} — ${m.title} (${m.duree})\n${m.contenu}\nMéthode : ${m.methode}`).join("\n")}`;
+  if (navigator.clipboard) navigator.clipboard.writeText(txt).then(()=>alert('✅ Programme copié !'));
+  else alert('Copie non disponible — utilisez un autre navigateur');
+}
+
+function switchFormTab(tab, btn) {
+  state.formTab = tab;
+  document.querySelectorAll('#form-tabs .tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderFormations();
+}
+
+// ── LIBRARY ──
+function filterLib() {
+  state.libSearch = document.getElementById('lib-search').value;
+  renderLib();
+}
+
+function renderLib() {
+  const catEl = document.getElementById('lib-cats');
+  const contentEl = document.getElementById('lib-content');
+  if (!catEl || !contentEl) return;
+  
+  catEl.innerHTML = LIB_CATS.map(c=>`<button onclick="setLibCat('${c}')" style="padding:4px 8px;border-radius:20px;font-size:10px;font-weight:${state.libCat===c?600:400};cursor:pointer;border:1px solid ${state.libCat===c?'var(--g)':'rgba(255,255,255,.1)'};background:${state.libCat===c?'var(--gd)':'transparent'};color:${state.libCat===c?'var(--g)':'var(--td)'};font-family:inherit;white-space:nowrap;flex-shrink:0">${c}</button>`).join('');
+  
+  const search = (state.libSearch||'').toLowerCase();
+  const filtered = LIBRARY.filter(f=>{
+    if (state.libCat==="Sauvegardés") return !!state.saved[f.id];
+    if (state.libCat==="⭐ Top") return !!f.top;
+    if (state.libCat==="✅ CPF") return f.cpf;
+    if (state.libCat==="Sarcelles") return f.zone.includes("Sarcelles")||f.zone.includes("95");
+    if (state.libCat==="Saint-Denis") return f.zone.includes("93")||f.zone==="Saint-Denis";
+    if (state.libCat==="SST") return f.formations.join(' ').toLowerCase().includes('sst')||f.formations.join(' ').toLowerCase().includes('secours');
+    if (state.libCat==="Incendie") return f.formations.join(' ').toLowerCase().includes('incendie')||f.formations.join(' ').toLowerCase().includes('évacuation');
+    if (state.libCat==="Gestes") return f.formations.join(' ').toLowerCase().includes('geste')||f.formations.join(' ').toLowerCase().includes('prap');
+    if (state.libCat==="Conflits / CNV") return f.formations.join(' ').toLowerCase().includes('conflit')||f.formations.join(' ').toLowerCase().includes('cnv');
+    return true;
+  }).filter(f=>!search||f.name.toLowerCase().includes(search)||f.formations.join(' ').toLowerCase().includes(search));
+  
+  contentEl.innerHTML = `<div class="mono dim" style="font-size:10px;margin-bottom:8px">${filtered.length} centre${filtered.length>1?'s':''} trouvé${filtered.length>1?'s':''}</div>`+filtered.map(f=>`
+    <div style="background:${state.saved[f.id]?'rgba(201,168,76,.04)':'var(--d3)'};border:1px solid ${state.saved[f.id]?'rgba(201,168,76,.35)':'rgba(255,255,255,.07)'};border-radius:12px;padding:12px 14px;margin-bottom:8px;border-left:3px solid ${f.top?'#FFD700':f.color}">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:7px">
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:700;color:var(--t);margin-bottom:2px">${f.name}</div>
+          <div style="font-size:11px;color:var(--td)">📍 ${f.adresse}</div>
+          <div style="font-size:11px;color:var(--g);margin-top:1px">📞 ${f.tel}</div>
+        </div>
+        <button onclick="toggleSave('${f.id}')" style="padding:4px 8px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;border:1px solid ${state.saved[f.id]?'var(--g)':'rgba(255,255,255,.12)'};background:${state.saved[f.id]?'var(--g)':'transparent'};color:${state.saved[f.id]?'var(--d)':'var(--td)'};margin-left:8px;flex-shrink:0">${state.saved[f.id]?'⭐':'☆'}</button>
+      </div>
+      <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:7px">
+        <span class="badge badge-g" style="font-size:9px">${f.dist}</span>
+        ${f.qualiopi?'<span class="badge badge-ok" style="font-size:9px">✅ Qualiopi</span>':''}
+        ${f.cpf?'<span class="badge badge-ac" style="font-size:9px">💳 CPF</span>':''}
+        ${f.top?'<span class="badge badge-gold2" style="font-size:9px">⭐ Top</span>':''}
+      </div>
+      <div onclick="toggleLib('${f.id}')" style="cursor:pointer">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div style="font-size:11px;color:var(--td)">${f.formations.slice(0,2).join(' · ')}${f.formations.length>2?' +'++(f.formations.length-2):''}</div>
+          <span id="lib-arr-${f.id}" style="color:var(--td);font-size:12px;transition:transform .2s">›</span>
+        </div>
+        <div id="lib-detail-${f.id}" style="display:none;margin-top:9px;padding-top:9px;border-top:1px solid rgba(255,255,255,.06)">
+          <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:7px">${f.formations.map(fm=>`<span class="badge" style="background:${f.color}10;color:${f.color};border:1px solid ${f.color}20;font-size:10px">${fm}</span>`).join('')}</div>
+          <div style="font-size:11px;color:var(--tm);font-style:italic;margin-bottom:8px">💡 ${f.note}</div>
+          <div style="display:flex;gap:7px">
+            <a href="tel:${f.tel}"><button class="btn-g" style="padding:6px 12px;font-size:11px">📞 Appeler</button></a>
+            <a href="https://${f.web}" target="_blank"><button class="btn-o" style="padding:6px 12px;font-size:11px">🌐 Site</button></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function setLibCat(c) {
+  state.libCat = c;
+  renderLib();
+}
+
+function toggleLib(id) {
+  const d = document.getElementById('lib-detail-'+id);
+  const a = document.getElementById('lib-arr-'+id);
+  if (!d) return;
+  const open = d.style.display==='block';
+  d.style.display = open?'none':'block';
+  if (a) a.style.transform = open?'none':'rotate(90deg)';
+}
+
+// ── ROADMAP ──
+let roadOpen = {p1:true,cpf:true};
+function switchRoadTab(tab, btn) {
+  state.roadTab = tab;
+  document.querySelectorAll('#page-roadmap .tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderRoadmap();
+}
+
+function renderRoadmap() {
+  const el = document.getElementById('roadmap-content');
+  if (!el) return;
+  if (state.roadTab==='plan') {
+    const total = ROADMAP.reduce((a,s)=>a+s.steps.length,0);
+    const done = Object.values(state.checked).filter(Boolean).length;
+    const pct = Math.round((done/total)*100);
+    el.innerHTML = `
+      <div class="card card-gold" style="margin-bottom:12px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px">
+          <div class="h3 gold">🎯 Progression globale</div>
+          <span class="mono" style="font-size:12px;color:var(--g);font-weight:600">${done}/${total} · ${pct}%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px">
+          ${[["0€","Mois 1"],["3500€","Mois 2"],["10K€","Mois 5"]].map(([v,l])=>`<div style="background:var(--d4);border-radius:8px;padding:7px 9px;text-align:center"><div class="h2 gold">${v}</div><div style="font-size:10px;color:var(--td);margin-top:1px">${l}</div></div>`).join('')}
+        </div>
+      </div>
+      ${ROADMAP.map(s=>`
+        <div style="margin-bottom:8px">
+          <div class="section-hdr ${roadOpen[s.id]?'open':''}" style="border-left-color:${s.color}" onclick="toggleRoadSec('${s.id}')">
+            <div style="display:flex;align-items:center;gap:9px">
+              <span style="font-size:16px">${s.icon}</span>
+              <div><div style="font-size:13px;font-weight:700;color:var(--t)">${s.title}</div><div style="font-size:10px;color:var(--td);margin-top:1px">${s.sub}</div></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:7px">
+              <span class="mono" style="font-size:11px;color:${s.color}">${s.steps.filter(([id])=>state.checked[id]).length}/${s.steps.length}</span>
+              <span class="arr" style="transform:${roadOpen[s.id]?'rotate(90deg)':'none'}">›</span>
+            </div>
+          </div>
+          ${roadOpen[s.id]?`<div class="section-body">${s.steps.map(([id,txt])=>`<div class="row" style="cursor:pointer" onclick="chk('${id}')"><div class="chk ${state.checked[id]?'on':''}">${state.checked[id]?'✓':''}</div><span style="font-size:11px;color:${state.checked[id]?'var(--td)':'var(--tm)'};text-decoration:${state.checked[id]?'line-through':'none'};line-height:1.5">${txt}</span></div>`).join('')}</div>`:''}
+        </div>
+      `).join('')}
+    `;
+  } else if (state.roadTab==='docs') {
+    renderDocs();
+  } else if (state.roadTab==='vente') {
+    renderVente();
+  }
+}
+
+function toggleRoadSec(id) {
+  roadOpen[id] = !roadOpen[id];
+  renderRoadmap();
+}
+
+function renderDocs() {
+  const el = document.getElementById('roadmap-content');
+  el.innerHTML = `
+    <div class="card card-gold" style="margin-bottom:14px">
+      <div class="h3 gold" style="margin-bottom:3px">📄 Documents officiels</div>
+      <div style="font-size:11px;color:var(--td);margin-bottom:12px">Remplis une fois → tous les documents se mettent à jour</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div><label>Organisme</label><input id="doc-org" value="${state.org}" oninput="state.org=this.value;updateDocPreview()" placeholder="Ex: Pro Formation IDF"></div>
+        <div><label>Formateur</label><input id="doc-trainer" value="${state.trainer}" oninput="state.trainer=this.value;updateDocPreview()" placeholder="Ex: Tiegbe Bamba"></div>
+        <div><label>Formation</label><input id="doc-title" value="${state.ftitle}" oninput="state.ftitle=this.value;updateDocPreview()" placeholder="Ex: Gestion des conflits"></div>
+        <div><label>Date</label><input id="doc-date" type="date" value="${state.fdate}" oninput="state.fdate=this.value;updateDocPreview()"></div>
+      </div>
+    </div>
+    <div class="tabs" style="margin-bottom:12px">
+      ${[["att","📜 Attestation"],["em","✍️ Émargement"],["conv","📋 Convention"],["sat","⭐ Satisfaction"]].map(([id,l])=>`<button class="tab ${state.docTab===id?'active':''}" onclick="state.docTab='${id}';renderDocs()">${l}</button>`).join('')}
+    </div>
+    <div id="doc-preview" style="background:var(--d3);border:1px solid rgba(201,168,76,.12);border-radius:8px;padding:13px 15px;font-family:'DM Mono',monospace;font-size:11px;line-height:1.9;color:var(--tm);white-space:pre-wrap;max-height:320px;overflow-y:auto;margin-bottom:12px"></div>
+    <div style="display:flex;gap:8px">
+      <button class="btn-g" style="flex:1" onclick="copyDoc()">📋 Copier le document</button>
+      <button class="btn-o" onclick="window.print()">🖨️</button>
+    </div>
+    <div class="card" style="border-left:3px solid var(--er);background:rgba(224,85,85,.04);margin-top:12px">
+      <div style="font-size:11px;color:var(--er);font-weight:600;margin-bottom:6px">⚖️ Rappel légal — Ordre des documents</div>
+      ${[["AVANT","Convention signée · Programme remis"],["PENDANT","Feuille d'émargement signée (matin + après-midi)"],["APRÈS","Attestation · Questionnaire satisfaction · Facture TVA exonérée"]].map(([q,a])=>`<div style="margin-bottom:7px;padding-bottom:7px;border-bottom:1px solid rgba(255,255,255,.05)"><div style="font-size:11px;font-weight:600;color:var(--t);margin-bottom:2px">${q}</div><div style="font-size:11px;color:var(--td)">${a}</div></div>`).join('')}
+      <div style="font-size:11px;color:var(--td)">Mention facture : <span class="mono" style="color:var(--tm)">Exonération TVA - Art. 261-4-4° du CGI</span></div>
+    </div>
+  `;
+  updateDocPreview();
+}
+
+function updateDocPreview() {
+  const el = document.getElementById('doc-preview');
+  if (!el) return;
+  const O=state.org||'[Organisme]',N=state.trainer||'[Formateur]',T=state.ftitle||'[Formation]',D=state.fdate||'[Date]';
+  const docs = {
+    att:`ATTESTATION DE FORMATION\n${O}\nNDA : 11 75 XXXXX 75\n\nJe soussigné(e) ${N} atteste que :\nM./Mme _____________________\na suivi et validé la formation :\n\nIntitulé : ${T}\nDate     : ${D}\nDurée    : ___ heures\n\nRÉSULTAT :\n☐ ACQUIS    ☐ EN COURS    ☐ NON ACQUIS\n\nFait à ________ le ________\n\n________________________\n${N} — Formateur`,
+    em:`FEUILLE D'ÉMARGEMENT\n${O} — NDA : 11 75 XXXXX 75\n\nFormation : ${T}\nDate : ${D}   Formateur : ${N}\n\n─────────────────────────────────\n N°  Nom & Prénom         Matin  AM\n─────────────────────────────────\n  1  _________________    ____  ____\n  2  _________________    ____  ____\n  3  _________________    ____  ____\n  4  _________________    ____  ____\n  5  _________________    ____  ____\n  6  _________________    ____  ____\n  7  _________________    ____  ____\n  8  _________________    ____  ____\n─────────────────────────────────`,
+    conv:`CONVENTION DE FORMATION PROFESSIONNELLE\n(Art. L6353-1 Code du travail)\n\nENTRE :\n${O}\nNDA : 11 75 XXXXX 75\nReprésenté par : ${N}\n\nET :\nEntreprise : ___________________________\nSIRET : ________________________________\n\nOBJET : « ${T} »\nDate : ${D}   Durée : ___ h\nPrix HT : ____________________________\nTVA : ☐ Exonérée (Art. 261-4-4° CGI)   ☐ 20%\n\nAnnulation < 15j : 50%   < 48h : 100%\n\nFait le ____________\n${N}                    L'Entreprise`,
+    sat:`QUESTIONNAIRE DE SATISFACTION\n${O}   ${T}   ${D}\n\nNotez de 1 à 5\n\nCONTENU\n  Pertinence                1  2  3  4  5\n  Adéquation besoins        1  2  3  4  5\n  Qualité des supports      1  2  3  4  5\n\nFORMATEUR\n  Clarté                    1  2  3  4  5\n  Maîtrise du sujet         1  2  3  4  5\n  Animation                 1  2  3  4  5\n\nGLOBAL                      1  2  3  4  5\n\nRecommandez ?   ☐ OUI   ☐ NON\n\nCommentaire : ___________________________`,
+  };
+  el.textContent = docs[state.docTab];
+}
+
+function copyDoc() {
+  const el = document.getElementById('doc-preview');
+  if (!el) return;
+  if (navigator.clipboard) navigator.clipboard.writeText(el.textContent).then(()=>alert('✅ Document copié !'));
+}
+
+function renderVente() {
+  const el = document.getElementById('roadmap-content');
+  const ventes = {
+    email:`Objet : Formation « Gestion des conflits » — [Ville]\n\nBonjour [Prénom],\n\nFormateur professionnel en IDF, je propose :\n« Gestion des conflits en entreprise » (3h)\n\n• Méthode CNV/OSBD pour désamorcer les tensions\n• Posture assertive face aux situations difficiles\n• Outils applicables dès le lendemain\n\nPrésentiel dans vos locaux · 8-12 pers. · 1 200€ HT\nConvention de formation fournie.\n\n15 minutes cette semaine ?\n\nTiegbe Bamba\nFormationPro — NDA : 11 75 XXXXX 75`,
+    linkedin:`1er MESSAGE :\n"Bonjour [Prénom], formateur conflits en IDF. Session 3h dispo en [mois]. Sujet d'actualité dans votre équipe ?"\n\nRELANCE J+5 :\n"Bonjour [Prénom], je reviens sur mon message. Pas de pression — si ce n'est pas le bon moment, pas de souci."`,
+    tel:`ACCROCHE (15s) :\n"Bonjour, formateur en IDF. Je travaille avec des entreprises de votre secteur sur la gestion des conflits. 2 minutes ?"\n\nDIAGNOSTIC :\n"C'est quelque chose que vous ressentez en ce moment dans vos équipes ?"\n\nCLOSING :\n"On se cale 15 min en visio cette semaine ?"\n\nOBJECTION budget :\n"Vous utilisez votre enveloppe OPCO ? Les formations courtes passent généralement très bien."`,
+    tarifs:`GRILLE TARIFAIRE COMPLÈTE\n\nFormations Standard :\n  Sensibilisation 3h (8-12 pers.)  : 1 200€ HT\n  Formation 1 jour                 : 2 400€ HT\n  Ménage terrain (2j, 8-14 pers.)  : 1 200€ HT\n  Coaching manager                 :   250€/h\n\nFormations Sport & Mental :\n  Mindset de Champion (4h)         : 1 800€ HT\n  Dépression du Champion (3h)      : 2 000€ HT\n  ELITE 360° (2 jours)             : 4 500€ HT\n  Coaching athlète individuel      :   350€/h\n\nFormations SKILLS :\n  Devenir Meilleur Formateur (1j)  : 1 400€ HT\n  Coach Amateur Pro (2j)           : 1 600€ HT\n  Club Amateur Pro (2j)            : 2 000€ HT\n\n→ OBJECTIF 10 000€/MOIS :\n  4 sessions std × 1200€ = 4 800€\n  + 1 ELITE 360° = 4 500€\n  + 1 camp basket = 1 000€\n  = 10 300€ 🎉`,
+  };
+  el.innerHTML = `
+    <div class="tabs" style="margin-bottom:12px">
+      ${[["email","📧 Email"],["linkedin","💼 LinkedIn"],["tel","📞 Tél."],["tarifs","💰 Tarifs"]].map(([id,l])=>`<button class="tab ${state.venteTab===id?'active':''}" onclick="state.venteTab='${id}';renderVente()">${l}</button>`).join('')}
+    </div>
+    <div style="background:var(--d3);border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:13px 15px;font-family:'DM Mono',monospace;font-size:11px;line-height:1.85;color:var(--tm);white-space:pre-wrap;max-height:360px;overflow-y:auto;margin-bottom:10px">${ventes[state.venteTab]}</div>
+    <button class="btn-g" style="width:100%" onclick="if(navigator.clipboard)navigator.clipboard.writeText(document.querySelector('#roadmap-content .mono').textContent).then(()=>alert('✅ Script copié !'))">📋 Copier le script</button>
+  `;
+}
+
+// ── ASSISTANT ──
+let chatMsgs = [{role:'ai',text:'Bonjour ! Assistant Formation Pro 🎓\n\nBase experte complète + FAQ + recherche web 🌐\n\nPose n\'importe quelle question sur la formation professionnelle en France.\nEx : FAQ SST · FAQ CPF · CNV · DREETS · OPCO · Qualiopi...'}];
+let chatBusy = false;
+
+function renderChips() {
+  const el = document.getElementById('quick-chips');
+  if (!el) return;
+  el.innerHTML = QUICK_CHIPS.map(([l,q])=>`<button class="chip" data-q="${q.replace(/"/g,'&quot;')}" onclick="sendMsg(this.dataset.q)">${l}</button>`).join('');
+}
+
+function renderChatMsgs() {
+  const el = document.getElementById('chat-msgs');
+  if (!el) return;
+  el.innerHTML = chatMsgs.map(m=>`
+    <div class="msg-wrap ${m.role}">
+      <div class="msg-av ${m.role}">${m.role==='ai'?'🎓':'👤'}</div>
+      <div class="msg-bubble ${m.role}">
+        ${m.tag?`<div class="msg-tag" style="color:${m.tag.includes('web')?'var(--ac)':'var(--ok)'}">${m.tag}</div>`:''}
+        ${m.text}
+      </div>
+    </div>
+  `).join('');
+  if (chatBusy) {
+    el.innerHTML += `<div class="msg-wrap ai"><div class="msg-av ai">🎓</div><div class="msg-bubble ai" style="display:flex;gap:6px;align-items:center">
+      <span class="dot" style="animation:pulse 1.1s 0ms infinite"></span>
+      <span class="dot" style="animation:pulse 1.1s 150ms infinite"></span>
+      <span class="dot" style="animation:pulse 1.1s 300ms infinite"></span>
+      <span style="font-size:10px;color:var(--td);margin-left:4px;font-family:'DM Mono',monospace">Recherche...</span>
+    </div></div>`;
+  }
+  el.scrollTop = el.scrollHeight;
+}
+
+async function sendMsg(override) {
+  const inp = document.getElementById('chat-input');
+  const q = (override || inp.value).trim();
+  if (!q || chatBusy) return;
+  inp.value = '';
+  chatMsgs.push({role:'user',text:q});
+  chatBusy = true;
+  document.getElementById('chat-send').disabled = true;
+  renderChatMsgs();
+  
+  const intent = detectIntent(q);
+  let text='', tag='';
+  if (intent && KB[intent]) { text=KB[intent]; tag='✅ Base experte'; }
+  else {
+    try {
+      const w = await webSearch(q);
+      if (w) { text='🌐 Résultat web\n\n'+w; tag='🌐 Web'; }
+      else { text="Je n'ai pas de réponse précise.\n\nEssaie :\norganisme · CPF · CNV · dreets · nda · opco · qualiopi · sst · tarifs\nOu : FAQ SST · FAQ CPF · FAQ incendie · FAQ conflits"; }
+    } catch { text="Recherche web indisponible. Essaie une question sur : organisme · CPF · SST · CNV · DREETS · OPCO · Qualiopi"; }
+  }
+  
+  chatMsgs.push({role:'ai',text,tag});
+  chatBusy = false;
+  document.getElementById('chat-send').disabled = false;
+  renderChatMsgs();
+}
+
+// Enter key in chat
+document.getElementById('chat-input').addEventListener('keydown', function(e) {
+  if (e.key==='Enter' && !e.shiftKey) { e.preventDefault(); sendMsg(); }
+});
+
+// ═══════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════
+function init() {
+  renderCheckboxes();
+  updateProgress();
+  updateSavedBadge();
+  renderChips();
+  renderChatMsgs();
+}
+
+init();
+</script>
+</body>
+</html>
